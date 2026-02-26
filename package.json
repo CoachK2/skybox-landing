@@ -1,0 +1,20 @@
+{
+  "name": "skybox-landing",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+```
+
+**Repo structure should be:**
+```
+skybox-landing/
+├── public/
+│   └── index.html   ← the landing page goes here
+├── server.js
+└── package.json
