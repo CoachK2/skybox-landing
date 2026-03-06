@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skybox — ROI Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080a0d;
+    --surface:   #0d1117;
+    --border:    #1e2329;
+    --border2:   #111418;
+    --blue:      #3b82f6;
+    --cyan:      #06b6d4;
+    --orange:    #f97316;
+    --purple:    #a855f7;
+    --green:     #22c55e;
+    --muted:     #475569;
+    --dim:       #334155;
+    --dimmer:    #1e2736;
+    --text:      #e2e8f0;
+    --subtext:   #94a3b8;
+    --mono:      'IBM Plex Mono', monospace;
+    --sans:      'IBM Plex Sans', sans-serif;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px 60px; }
+
+  /* ── typography ── */
+  .mono { font-family: var(--mono); }
+  .label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .sub { font-size: 10px; color: var(--dim); font-family: var(--sans); line-height: 1.5; }
+
+  /* ── layout ── */
+  .cols { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .left-col { flex: 0 0 300px; min-width: 260px; display: flex; flex-direction: column; gap: 12px; }
+  .right-col { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── panel ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .panel-head { margin-bottom: 16px; }
+
+  /* ── tabs ── */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 13px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    font-weight: 400;
+    transition: all 0.15s;
+  }
+  .tab.active-blue  { background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.35); color: var(--blue); font-weight: 600; }
+  .tab.active-orange{ background: rgba(249,115,22,0.12);  border-color: rgba(249,115,22,0.35);  color: var(--orange); font-weight: 600; }
+  .tab.active-purple{ background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.35); color: var(--purple); font-weight: 600; }
+  .tab.active-green { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.35);  color: var(--green); font-weight: 600; }
+
+  /* ── input panel sections ── */
+  .input-section { display: none; }
+  .input-section.visible { display: block; }
+
+  /* ── sliders ── */
+  .slider-row { margin-bottom: 18px; }
+  .slider-labels { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px; }
+  .slider-name { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+  .slider-hint { font-size: 9px; color: #2a3140; font-family: var(--sans); margin-top: 2px; }
+  .slider-val  { font-family: var(--mono); font-size: 12px; color: var(--text); font-weight: 600; white-space: nowrap; margin-left: 12px; }
+
+  .slider-track {
+    position: relative; height: 24px; display: flex; align-items: center; cursor: pointer;
+  }
+  .track-bg {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: #1a1f28; border-radius: 2px; overflow: hidden;
+  }
+  .track-fill {
+    height: 100%; border-radius: 2px; transition: width 0.04s;
+  }
+  .track-thumb {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--bg); pointer-events: none; transition: left 0.04s;
+  }
+  input[type=range] {
+    position: absolute; width: 100%; opacity: 0; height: 24px;
+    cursor: pointer; -webkit-appearance: none; appearance: none;
+  }
+
+  /* ── line items ── */
+  .line-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 11px 0; border-bottom: 1px solid var(--border2);
+  }
+  .line-item:last-of-type { border-bottom: none; }
+  .line-label { font-size: 12px; color: var(--subtext); font-family: var(--sans); margin-bottom: 2px; }
+  .line-calc  { font-size: 9px; color: #2a3140; font-family: var(--mono); line-height: 1.5; }
+  .line-time  { font-size: 9px; font-family: var(--mono); margin-top: 2px; }
+  .line-value { font-family: var(--mono); font-size: 14px; font-weight: 600; white-space: nowrap; margin-left: 16px; flex-shrink: 0; }
+
+  .subtotal-row {
+    display: flex; justify-content: space-between; padding-top: 12px; margin-top: 4px;
+    border-top: 1px solid var(--border2);
+  }
+  .subtotal-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .subtotal-val   { font-family: var(--mono); font-size: 14px; font-weight: 700; }
+
+  /* ── workload rows ── */
+  .workload-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 0; border-bottom: 1px solid var(--border2);
+  }
+  .workload-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .workload-hrs  { font-family: var(--mono); font-size: 13px; font-weight: 700; text-align: right; flex-shrink: 0; }
+  .workload-per  { font-family: var(--mono); font-size: 9px; color: var(--dim); text-align: right; }
+
+  /* ── headline bar ── */
+  .headline-bar {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 20px;
+    align-items: center; justify-content: space-between;
+  }
+  .roi-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 6px; padding: 10px 18px;
+  }
+  .roi-multiple { font-family: var(--mono); font-size: 34px; font-weight: 700; color: var(--green); line-height: 1; }
+  .roi-label    { font-size: 11px; color: var(--green); font-weight: 600; }
+  .roi-sub      { font-size: 10px; color: var(--muted); }
+
+  /* ── metric cards ── */
+  .cards-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .metric-card {
+    flex: 1; min-width: 130px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px;
+    border-top-width: 2px;
+  }
+  .metric-val  { font-family: var(--mono); font-size: 22px; font-weight: 700; line-height: 1; margin-top: 8px; }
+  .metric-sub  { font-size: 10px; color: var(--dim); margin-top: 5px; }
+
+  /* ── time to value ── */
+  .ttv-track-wrap { position: relative; padding: 30px 0 40px; margin: 4px 0 0; }
+  .ttv-line {
+    position: absolute; top: 40px; left: 0; right: 0;
+    height: 2px; background: #1a1f28; border-radius: 2px;
+  }
+  .ttv-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transition: width 0.5s ease;
+  }
+  .ttv-dot-wrap { position: absolute; transform: translateX(-50%); }
+  .ttv-dot-label { font-family: var(--mono); font-size: 8px; color: var(--dim); text-align: center; white-space: nowrap; margin-bottom: 4px; }
+  .ttv-dot {
+    width: 8px; height: 8px; border-radius: 50%; margin: 0 auto;
+    background: #1e2329; border: 2px solid #2a3140;
+  }
+  .ttv-dot.highlight {
+    width: 12px; height: 12px; margin-top: -2px;
+    background: var(--green); border-color: var(--green);
+    box-shadow: 0 0 12px rgba(34,197,94,0.6);
+  }
+  .ttv-dot-event {
+    font-size: 8px; font-family: var(--sans); text-align: center;
+    margin-top: 8px; line-height: 1.3; max-width: 80px;
+    color: var(--dimmer);
+  }
+  .ttv-dot-event.highlight { color: var(--green); }
+
+  /* ── summary bar ── */
+  .summary-bar {
+    background: var(--surface);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-left: 3px solid var(--green);
+    border-radius: 8px; padding: 18px 22px;
+    display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;
+  }
+  .summary-item {}
+  .summary-num { font-family: var(--mono); font-size: 22px; font-weight: 700; }
+
+  /* ── divider ── */
+  .divider { height: 1px; background: var(--border2); margin: 14px 0; }
+
+  /* ── quote ── */
+  .quote-block {
+    padding: 16px 20px; background: var(--surface);
+    border: 1px solid var(--border); border-left: 3px solid var(--cyan);
+    border-radius: 6px; margin-top: 28px;
+  }
+  .quote-text { font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.7; }
+  .quote-attr { margin-top: 8px; font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 0.05em; }
+
+  .footer { text-align: center; font-family: var(--mono); font-size: 10px; color: #161b22; letter-spacing: 0.08em; margin-top: 20px; }
+
+  /* ── header ── */
+  .header-rule { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .header-line { flex: 1; height: 1px; background: #1a1f28; }
+  .header-tag  {
+    font-family: var(--mono); font-size: 9px; color: var(--green);
+    background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);
+    padding: 2px 8px; border-radius: 3px; letter-spacing: 0.1em;
+  }
+  .header-brand { font-family: var(--mono); font-size: 10px; color: var(--blue); letter-spacing: 0.15em; font-weight: 600; }
+  .page-title { font-family: var(--mono); font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 5px; }
+  .page-desc  { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header-rule">
+    <span class="header-brand">SKYBOX · ROW9 LLC</span>
+    <div class="header-line"></div>
+    <span class="header-tag">LIVE CALCULATOR</span>
+  </div>
+  <div class="page-title">ROI Story Builder</div>
+  <div class="page-desc">Full value picture — hard savings, hidden workload costs, soft benefits, and time to breakeven.</div>
+
+  <div class="cols">
+
+    <!-- ══ LEFT: INPUTS ══ -->
+    <div class="left-col">
+      <div class="tabs" id="tabs">
+        <button class="tab active-blue" data-tab="hard" data-color="blue">HARD SAVINGS</button>
+        <button class="tab" data-tab="workload" data-color="orange">WORKLOAD</button>
+        <button class="tab" data-tab="soft" data-color="purple">SOFT</button>
+        <button class="tab" data-tab="price" data-color="green">PRICING</button>
+      </div>
+
+      <div class="panel">
+
+        <!-- HARD SAVINGS INPUTS -->
+        <div class="input-section visible" id="sec-hard">
+          <div class="label" style="color:var(--blue);margin-bottom:14px;">Program Basics</div>
+          <div id="slider-gamesPerSeason"></div>
+          <div id="slider-sportsCount"></div>
+          <div id="slider-minPerGame"></div>
+          <div id="slider-ratePerHour"></div>
+          <div id="slider-postponementsPerSeason"></div>
+          <div id="slider-minPerPostponement"></div>
+          <div id="slider-errorCostPerSeason"></div>
+        </div>
+
+        <!-- WORKLOAD INPUTS -->
+        <div class="input-section" id="sec-workload">
+          <div class="label" style="color:var(--orange);margin-bottom:14px;">Chase-Down Friction</div>
+          <div id="slider-systemsSwitchedPerGame"></div>
+          <div id="slider-minChasePerGame"></div>
+          <div id="slider-noResponseFollowUps"></div>
+          <div id="slider-minPerFollowUp"></div>
+        </div>
+
+        <!-- SOFT INPUTS -->
+        <div class="input-section" id="sec-soft">
+          <div class="label" style="color:var(--purple);margin-bottom:14px;">Soft Benefit Drivers</div>
+          <div id="slider-turnoverRiskPct"></div>
+          <div id="slider-avgTurnoverCost"></div>
+          <div id="slider-parentComplaintsPerSeason"></div>
+          <div id="slider-minPerComplaint"></div>
+        </div>
+
+        <!-- PRICING INPUTS -->
+        <div class="input-section" id="sec-price">
+          <div class="label" style="color:var(--green);margin-bottom:14px;">Skybox Pricing</div>
+          <div id="slider-annualPrice"></div>
+          <div style="margin-top:16px;padding:12px;background:#0a0e13;border:1px solid #1a1f28;border-radius:6px;">
+            <div class="label" style="color:var(--dim);margin-bottom:6px;">Cost per game</div>
+            <div class="mono" style="font-size:18px;font-weight:700;color:var(--green);" id="cost-per-game">—</div>
+            <div class="sub" style="margin-top:4px;">Less than a box of baseballs per season</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ RIGHT: RESULTS ══ -->
+    <div class="right-col">
+
+      <!-- Headline -->
+      <div class="headline-bar">
+        <div>
+          <div class="label" style="color:var(--dim);margin-bottom:10px;">Total Value vs. Price</div>
+          <div class="roi-badge">
+            <div class="roi-multiple" id="roi-multiple">—</div>
+            <div>
+              <div class="roi-label">RETURN ON INVESTMENT</div>
+              <div class="roi-sub">total value vs. annual price</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div class="label" style="color:var(--dim);margin-bottom:6px;">Time Recovered</div>
+          <div class="mono" style="font-size:26px;font-weight:700;color:var(--orange);" id="total-hours">— hrs</div>
+          <div class="sub">per season</div>
+        </div>
+      </div>
+
+      <!-- Metric cards -->
+      <div class="cards-row">
+        <div class="metric-card" style="border-top-color:var(--blue);">
+          <div class="label" style="color:var(--muted);">Hard Savings</div>
+          <div class="metric-val" style="color:var(--blue);" id="card-hard">—</div>
+          <div class="metric-sub">Quantifiable labor + error cost</div>
+        </div>
+        <div class="metric-card" style="border-top-color:var(--orange);">
+          <div class="label" style="color:var(--muted);">Hidden Workload</div>
+          <div class="metric-val" style="color:var(--orange);" id="card-chase">—</div>
+          <div class="metric-sub">System-switching + chase-downs</div>
+        </div>
+        <div class="metric-card" style="border-top-color:var(--purple);">
+          <div class="label" style="color:var(--muted);">Soft Benefits</div>
+          <div class="metric-val" style="color:var(--purple);" id="card-soft">—</div>
+          <div class="metric-sub">Retention + reputation</div>
+        </div>
+      </div>
+
+      <!-- Time to Value -->
+      <div class="panel">
+        <div class="label" style="color:var(--cyan);margin-bottom:4px;">Time to Value</div>
+        <div class="sub" style="margin-bottom:0;">From go-live to full breakeven — what an AD can expect on the timeline</div>
+        <div class="ttv-track-wrap" id="ttv-wrap">
+          <div class="ttv-line"><div class="ttv-fill" id="ttv-fill"></div></div>
+          <!-- dots injected by JS -->
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;">
+          <div>
+            <div class="label" style="color:var(--dim);">Breakeven Day</div>
+            <div class="mono" style="font-size:20px;font-weight:700;color:var(--green);margin-top:4px;" id="ttv-day">—</div>
+          </div>
+          <div>
+            <div class="label" style="color:var(--dim);">Daily Value</div>
+            <div class="mono" style="font-size:20px;font-weight:700;color:var(--cyan);margin-top:4px;" id="ttv-daily">—</div>
+          </div>
+          <div>
+            <div class="label" style="color:var(--dim);">Per-Game Value</div>
+            <div class="mono" style="font-size:20px;font-weight:700;color:var(--subtext);margin-top:4px;" id="ttv-pergame">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hard savings breakdown -->
+      <div class="panel">
+        <div class="label" style="color:var(--blue);">Hard Savings — Breakdown</div>
+        <div class="sub" style="margin-top:3px;margin-bottom:14px;">Defensible numbers you can put in front of any superintendent</div>
+        <div class="line-item">
+          <div>
+            <div class="line-label">Confirmation workflow automation</div>
+            <div class="line-calc" id="calc-confirm">—</div>
+          </div>
+          <div class="line-value" style="color:var(--blue);" id="val-confirm">—</div>
+        </div>
+        <div class="line-item">
+          <div>
+            <div class="line-label">Postponement notification chain</div>
+            <div class="line-calc" id="calc-postpone">—</div>
+          </div>
+          <div class="line-value" style="color:var(--blue);" id="val-postpone">—</div>
+        </div>
+        <div class="line-item">
+          <div>
+            <div class="line-label">Error & rescheduling cost reduction</div>
+            <div class="line-calc">Missed confirmations, wrong officials, bus no-shows</div>
+          </div>
+          <div class="line-value" style="color:var(--blue);" id="val-error">—</div>
+        </div>
+        <div class="subtotal-row">
+          <span class="subtotal-label">SUBTOTAL — HARD</span>
+          <span class="subtotal-val" style="color:var(--blue);" id="sub-hard">—</span>
+        </div>
+      </div>
+
+      <!-- Hidden workload breakdown -->
+      <div class="panel">
+        <div class="label" style="color:var(--orange);">Hidden Workload — What It's Actually Costing</div>
+        <div class="sub" style="margin-top:3px;margin-bottom:14px;">The friction nobody tracks but every AD feels — system-switching, follow-up loops, manual relay chains</div>
+        <div class="workload-row">
+          <div class="workload-icon">🔀</div>
+          <div style="flex:1;">
+            <div class="line-label">System-switching overhead</div>
+            <div class="line-calc" id="calc-switch">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-switch">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="workload-row">
+          <div class="workload-icon">📞</div>
+          <div style="flex:1;">
+            <div class="line-label">Chasing unconfirmed games</div>
+            <div class="line-calc" id="calc-chase">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-chase">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="workload-row">
+          <div class="workload-icon">🔁</div>
+          <div style="flex:1;">
+            <div class="line-label">Non-responsive AD follow-ups</div>
+            <div class="line-calc" id="calc-followup">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-followup">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="workload-row" style="border-bottom:none;">
+          <div class="workload-icon">📡</div>
+          <div style="flex:1;">
+            <div class="line-label">Manual postponement relay chain</div>
+            <div class="line-calc" id="calc-relay">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-relay">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="subtotal-row" style="margin-top:12px;">
+          <span class="subtotal-label">SUBTOTAL — HIDDEN WORKLOAD</span>
+          <span class="subtotal-val" style="color:var(--orange);" id="sub-chase">—</span>
+        </div>
+      </div>
+
+      <!-- Soft benefits breakdown -->
+      <div class="panel">
+        <div class="label" style="color:var(--purple);">Soft Benefits — Breakdown</div>
+        <div class="sub" style="margin-top:3px;margin-bottom:14px;">Harder to put a number on — but real, and often what closes the deal</div>
+        <div class="line-item">
+          <div>
+            <div class="line-label">AD retention & burnout prevention</div>
+            <div class="line-calc" id="calc-retention">—</div>
+          </div>
+          <div class="line-value" style="color:var(--purple);" id="val-retention">—</div>
+        </div>
+        <div class="line-item" style="border-bottom:none;">
+          <div>
+            <div class="line-label">Parent experience + complaint handling</div>
+            <div class="line-calc" id="calc-complaint">—</div>
+          </div>
+          <div class="line-value" style="color:var(--purple);" id="val-complaint">—</div>
+        </div>
+        <div class="subtotal-row">
+          <span class="subtotal-label">SUBTOTAL — SOFT</span>
+          <span class="subtotal-val" style="color:var(--purple);" id="sub-soft">—</span>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-bar">
+        <div class="summary-item">
+          <div class="label" style="color:var(--muted);margin-bottom:6px;">Annual Value Delivered</div>
+          <div class="summary-num" style="color:var(--green);" id="sum-total">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="label" style="color:var(--muted);margin-bottom:6px;">Skybox Annual Price</div>
+          <div class="summary-num" style="color:var(--subtext);" id="sum-price">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="label" style="color:var(--muted);margin-bottom:6px;">Net Gain</div>
+          <div class="summary-num" style="color:var(--green);" id="sum-net">—</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-block">
+    <div class="quote-text">"I like no bullshit and I've been waiting for something like this for a really long time so I'm cautiously optimistic that this really could help take care of a huge portion of what we deal with all the time."</div>
+    <div class="quote-attr">— MIKE O'BRIEN, AD · FOX CHAPEL AREA HIGH SCHOOL · PILOT CUSTOMER</div>
+  </div>
+
+  <div class="footer">© 2026 ROW9 LLC · SKYBOX COMMAND CENTER</div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+const state = {
+  gamesPerSeason:           60,
+  sportsCount:               3,
+  minPerGame:               25,
+  ratePerHour:              35,
+  errorCostPerSeason:      400,
+  postponementsPerSeason:   12,
+  minPerPostponement:       45,
+  systemsSwitchedPerGame:    3,
+  minChasePerGame:          12,
+  noResponseFollowUps:      18,
+  minPerFollowUp:           15,
+  turnoverRiskPct:          15,
+  avgTurnoverCost:       12000,
+  parentComplaintsPerSeason:20,
+  minPerComplaint:          20,
+  annualPrice:            2400,
+};
+
+// ── Slider definitions ─────────────────────────────────────────────────────────
+const SLIDERS = [
+  // Hard
+  { key: "gamesPerSeason",           label: "Games / season",            min: 10,   max: 200,  step: 5,    fmt: v => v,            section: "hard" },
+  { key: "sportsCount",              label: "Sports in pilot",            min: 1,    max: 12,   step: 1,    fmt: v => v,            section: "hard" },
+  { key: "minPerGame",               label: "Min per confirmation",       min: 5,    max: 60,   step: 1,    fmt: v => v + " min",   section: "hard", hint: "Avg time per game to confirm opponent, officials, bus" },
+  { key: "ratePerHour",              label: "AD hourly rate",             min: 20,   max: 100,  step: 5,    fmt: v => "$" + v + "/hr", section: "hard" },
+  { key: "postponementsPerSeason",   label: "Postponements / season",     min: 0,    max: 40,   step: 1,    fmt: v => v,            section: "hard" },
+  { key: "minPerPostponement",       label: "Min per postponement",       min: 10,   max: 120,  step: 5,    fmt: v => v + " min",   section: "hard", hint: "Calling coach, bus, officials, trainers, faculty mgr" },
+  { key: "errorCostPerSeason",       label: "Error cost / season",        min: 0,    max: 2000, step: 50,   fmt: v => "$" + v,      section: "hard", hint: "Wrong officials, missed bus, last-min scrambles" },
+  // Workload
+  { key: "systemsSwitchedPerGame",   label: "Systems checked per game",   min: 1,    max: 8,    step: 1,    fmt: v => v,            section: "workload", hint: "Arbiter, Schedule Star, email, phone, text, etc." },
+  { key: "minChasePerGame",          label: "Min chasing per game",       min: 0,    max: 45,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Hunting down confirmations that haven't come back" },
+  { key: "noResponseFollowUps",      label: "Non-response follow-ups",    min: 0,    max: 60,   step: 1,    fmt: v => v,            section: "workload", hint: "Games needing 2nd or 3rd outreach attempt" },
+  { key: "minPerFollowUp",           label: "Min per follow-up",          min: 5,    max: 30,   step: 1,    fmt: v => v + " min",   section: "workload" },
+  // Soft
+  { key: "turnoverRiskPct",          label: "Turnover risk this year",    min: 0,    max: 100,  step: 5,    fmt: v => v + "%",      section: "soft", hint: "% chance AD leaves due to burnout or frustration" },
+  { key: "avgTurnoverCost",          label: "Avg AD turnover cost",       min: 5000, max: 30000,step: 500,  fmt: v => "$" + fmtNum(v), section: "soft", hint: "Recruiting, onboarding, institutional knowledge loss" },
+  { key: "parentComplaintsPerSeason",label: "Parent complaints / season", min: 0,    max: 100,  step: 1,    fmt: v => v,            section: "soft", hint: "Irate emails, phone calls, missed comm fallout" },
+  { key: "minPerComplaint",          label: "Min to resolve complaint",   min: 5,    max: 60,   step: 5,    fmt: v => v + " min",   section: "soft" },
+  // Price
+  { key: "annualPrice",              label: "Skybox annual price",        min: 500,  max: 8000, step: 100,  fmt: v => "$" + fmtNum(v), section: "price" },
+];
+
+// ── Formatting helpers ─────────────────────────────────────────────────────────
+function fmtNum(n) { return Math.round(n).toLocaleString("en-US"); }
+function fmtD(n)   { return "$" + fmtNum(n); }
+function fmtH(h)   { return Math.round(h) + " hrs"; }
+
+// ── Build sliders ──────────────────────────────────────────────────────────────
+const accentMap = { hard: "#3b82f6", workload: "#f97316", soft: "#a855f7", price: "#22c55e" };
+
+SLIDERS.forEach(s => {
+  const wrap = document.getElementById("slider-" + s.key);
+  if (!wrap) return;
+  const accent = accentMap[s.section] || "#06b6d4";
+
+  wrap.innerHTML = `
+    <div class="slider-row">
+      <div class="slider-labels">
+        <div>
+          <div class="slider-name">${s.label.toUpperCase()}</div>
+          ${s.hint ? `<div class="slider-hint">${s.hint}</div>` : ""}
+        </div>
+        <div class="slider-val" id="slval-${s.key}">${s.fmt(state[s.key])}</div>
+      </div>
+      <div class="slider-track">
+        <div class="track-bg">
+          <div class="track-fill" id="slfill-${s.key}" style="background:linear-gradient(90deg,${accent}99,${accent})"></div>
+        </div>
+        <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${state[s.key]}" id="slinput-${s.key}" />
+        <div class="track-thumb" id="slthumb-${s.key}" style="background:${accent};box-shadow:0 0 8px ${accent}66;"></div>
+      </div>
+    </div>
+  `;
+
+  const input = document.getElementById("slinput-" + s.key);
+  const fill  = document.getElementById("slfill-"  + s.key);
+  const thumb = document.getElementById("slthumb-" + s.key);
+  const val   = document.getElementById("slval-"   + s.key);
+
+  function updateSlider() {
+    const pct = ((input.value - s.min) / (s.max - s.min)) * 100;
+    fill.style.width  = pct + "%";
+    thumb.style.left  = `calc(${pct}% - 6px)`;
+    val.textContent   = s.fmt(Number(input.value));
+    state[s.key]      = Number(input.value);
+    recalc();
+  }
+  // init position
+  const initPct = ((state[s.key] - s.min) / (s.max - s.min)) * 100;
+  fill.style.width = initPct + "%";
+  thumb.style.left = `calc(${initPct}% - 6px)`;
+
+  input.addEventListener("input", updateSlider);
+});
+
+// ── Tabs ───────────────────────────────────────────────────────────────────────
+const tabColorMap = { hard: "blue", workload: "orange", soft: "purple", price: "green" };
+
+document.getElementById("tabs").addEventListener("click", e => {
+  const btn = e.target.closest(".tab");
+  if (!btn) return;
+  const tab = btn.dataset.tab;
+  document.querySelectorAll(".tab").forEach(b => {
+    b.className = "tab";
+  });
+  btn.className = "tab active-" + tabColorMap[tab];
+  document.querySelectorAll(".input-section").forEach(s => s.classList.remove("visible"));
+  document.getElementById("sec-" + tab).classList.add("visible");
+});
+
+// ── Animation ─────────────────────────────────────────────────────────────────
+const animated = {};
+function animateTo(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (animated[id] !== undefined) cancelAnimationFrame(animated[id + "_raf"]);
+  const start = animated[id] || 0;
+  const diff = target - start;
+  const dur = 600;
+  const t0 = performance.now();
+  function tick(now) {
+    const t = Math.min((now - t0) / dur, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const cur = Math.round(start + diff * ease);
+    animated[id] = cur;
+    return cur;
+  }
+  function frame(now) {
+    const cur = tick(now);
+    el.textContent = fmtD(cur);
+    if ((now - t0) / dur < 1) animated[id + "_raf"] = requestAnimationFrame(frame);
+    else animated[id] = target;
+  }
+  animated[id + "_raf"] = requestAnimationFrame(frame);
+}
+
+function setRaw(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+// ── TTV dots ──────────────────────────────────────────────────────────────────
+function buildTTV(daysToROI) {
+  const wrap = document.getElementById("ttv-wrap");
+  const oldDots = wrap.querySelectorAll(".ttv-dot-wrap");
+  oldDots.forEach(d => d.remove());
+
+  const maxDay = Math.max(120, daysToROI + 15);
+  const milestones = [
+    { day: 0,         label: "Day 1",          event: "Emails sending",        hi: false },
+    { day: 14,        label: "Day 14",          event: "First cadence complete",hi: false },
+    { day: 30,        label: "Day 30",          event: "Dashboard live",         hi: false },
+    { day: 60,        label: "Day 60",          event: "Postponement chain auto",hi: false },
+    { day: daysToROI, label: `Day ${daysToROI}`,event: "Full ROI breakeven",     hi: true  },
+  ];
+
+  const fill = document.getElementById("ttv-fill");
+  fill.style.width = Math.min((daysToROI / maxDay) * 100, 100) + "%";
+
+  milestones.forEach(m => {
+    const pct = Math.min((m.day / maxDay) * 100, 97);
+    const dw = document.createElement("div");
+    dw.className = "ttv-dot-wrap";
+    dw.style.left = pct + "%";
+    dw.style.top = "0";
+    dw.innerHTML = `
+      <div class="ttv-dot-label">${m.label}</div>
+      <div class="ttv-dot${m.hi ? " highlight" : ""}"></div>
+      <div class="ttv-dot-event${m.hi ? " highlight" : ""}">${m.event}</div>
+    `;
+    wrap.appendChild(dw);
+  });
+}
+
+// ── Main recalc ────────────────────────────────────────────────────────────────
+function recalc() {
+  const s = state;
+
+  // Hard
+  const confirmHrs  = (s.gamesPerSeason * s.sportsCount * s.minPerGame) / 60;
+  const confirmSav  = Math.round(confirmHrs * s.ratePerHour);
+  const postponeHrs = (s.postponementsPerSeason * s.minPerPostponement) / 60;
+  const postponeSav = Math.round(postponeHrs * s.ratePerHour);
+  const errorSav    = s.errorCostPerSeason;
+  const totalHard   = confirmSav + postponeSav + errorSav;
+
+  // Hidden workload
+  const switchHrs   = (s.gamesPerSeason * s.sportsCount * s.systemsSwitchedPerGame * 2.5) / 60;
+  const switchSav   = Math.round(switchHrs * s.ratePerHour);
+  const chaseHrs    = (s.gamesPerSeason * s.sportsCount * s.minChasePerGame) / 60;
+  const chaseSav    = Math.round(chaseHrs * s.ratePerHour);
+  const followUpHrs = (s.noResponseFollowUps * s.minPerFollowUp) / 60;
+  const followUpSav = Math.round(followUpHrs * s.ratePerHour);
+  const relayHrs    = (s.postponementsPerSeason * 5 * 4) / 60;
+  const relaySav    = Math.round(relayHrs * s.ratePerHour);
+  const totalChaseHrs = switchHrs + chaseHrs + followUpHrs + relayHrs;
+  const totalChaseSav = switchSav + chaseSav + followUpSav + relaySav;
+
+  // Soft
+  const retentionSav  = Math.round((s.turnoverRiskPct / 100) * s.avgTurnoverCost);
+  const complaintHrs  = (s.parentComplaintsPerSeason * s.minPerComplaint) / 60;
+  const complaintSav  = Math.round(complaintHrs * s.ratePerHour);
+  const softTotal     = retentionSav + complaintSav;
+
+  // Totals
+  const totalHrs    = Math.round(confirmHrs + postponeHrs + totalChaseHrs);
+  const grandTotal  = totalHard + totalChaseSav + softTotal;
+  const roiMultiple = Math.max(1, Math.round(grandTotal / s.annualPrice));
+  const dailySav    = grandTotal / 180;
+  const daysToROI   = Math.round(s.annualPrice / dailySav);
+  const perGame     = Math.round(grandTotal / Math.max(1, s.gamesPerSeason * s.sportsCount));
+
+  // ── Update DOM ──
+  setRaw("roi-multiple", roiMultiple + "×");
+  setRaw("total-hours", totalHrs + " hrs");
+
+  // cards
+  setRaw("card-hard",  fmtD(totalHard));
+  setRaw("card-chase", fmtD(totalChaseSav));
+  setRaw("card-soft",  fmtD(softTotal));
+
+  // hard breakdown
+  setRaw("calc-confirm",  `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.minPerGame} min ÷ 60 × $${s.ratePerHour}/hr`);
+  setRaw("val-confirm",   fmtD(confirmSav));
+  setRaw("calc-postpone", `${s.postponementsPerSeason} postponements × ${s.minPerPostponement} min ÷ 60 × $${s.ratePerHour}/hr`);
+  setRaw("val-postpone",  fmtD(postponeSav));
+  setRaw("val-error",     fmtD(errorSav));
+  setRaw("sub-hard",      fmtD(totalHard));
+
+  // workload breakdown
+  setRaw("calc-switch",   `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.systemsSwitchedPerGame} systems × 2.5 min avg`);
+  setRaw("hrs-switch",    Math.round(switchHrs) + " hrs");
+  setRaw("calc-chase",    `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.minChasePerGame} min chasing`);
+  setRaw("hrs-chase",     Math.round(chaseHrs) + " hrs");
+  setRaw("calc-followup", `${s.noResponseFollowUps} follow-ups × ${s.minPerFollowUp} min each`);
+  setRaw("hrs-followup",  Math.round(followUpHrs) + " hrs");
+  setRaw("calc-relay",    `${s.postponementsPerSeason} postponements × 4 contacts × 5 min avg`);
+  setRaw("hrs-relay",     Math.round(relayHrs) + " hrs");
+  setRaw("sub-chase",     fmtD(totalChaseSav));
+
+  // soft breakdown
+  setRaw("calc-retention", `${s.turnoverRiskPct}% risk × $${fmtNum(s.avgTurnoverCost)} avg turnover cost`);
+  setRaw("val-retention",  fmtD(retentionSav));
+  setRaw("calc-complaint", `${s.parentComplaintsPerSeason} complaints × ${s.minPerComplaint} min ÷ 60 × $${s.ratePerHour}/hr`);
+  setRaw("val-complaint",  fmtD(complaintSav));
+  setRaw("sub-soft",       fmtD(softTotal));
+
+  // TTV
+  buildTTV(daysToROI);
+  setRaw("ttv-day",     "Day " + daysToROI);
+  setRaw("ttv-daily",   fmtD(Math.round(dailySav)) + "/day");
+  setRaw("ttv-pergame", fmtD(perGame) + "/game");
+
+  // summary
+  setRaw("sum-total",  fmtD(grandTotal));
+  setRaw("sum-price",  fmtD(s.annualPrice));
+  setRaw("sum-net",    "+" + fmtD(grandTotal - s.annualPrice));
+
+  // cost per game
+  const cpg = s.annualPrice / Math.max(1, s.gamesPerSeason * s.sportsCount);
+  setRaw("cost-per-game", fmtD(Math.round(cpg)) + " / game");
+}
+
+// Init
+recalc();
+</script>
+</body>
+</html>
