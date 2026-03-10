@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skybox — System Status · Fox Chapel Pilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #080a0d;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #e2e8f0;
+      padding: 40px 24px;
+    }
+    .sans { font-family: 'IBM Plex Sans', sans-serif; }
+    .container { max-width: 760px; margin: 0 auto; }
+    .filter-btn { cursor: pointer; transition: all 0.15s ease; user-select: none; }
+    .filter-btn:hover { opacity: 1 !important; }
+    .status-row { transition: background 0.15s ease; cursor: pointer; }
+    .status-row:hover { background: #111418 !important; }
+    .chevron { transition: transform 0.2s ease; display: inline-block; }
+    .chevron.open { transform: rotate(180deg); }
+    .expand-detail { display: none; }
+    .expand-detail.open { display: block; }
+    .progress-fill { transition: width 0.4s ease; }
+  </style>
+</head>
+<body>
+
+<div class="container" style="margin-bottom: 32px;">
+  <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:6px;">
+    <div class="sans" style="font-size:22px; font-weight:600; color:#fff; letter-spacing:-0.5px;">Skybox — System Status</div>
+    <div style="font-size:11px; color:#22c55e; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); padding:2px 8px; border-radius:3px;">PILOT ACTIVE</div>
+  </div>
+  <div style="font-size:11px; color:#475569; letter-spacing:0.05em;">
+    FCHS Fox Chapel · 3 sports · 55 games · Parts 0–10 synthesized
+  </div>
+  <div style="font-size:11px; color:#334155; letter-spacing:0.05em; margin-top:2px;">
+    Last updated: March 10, 2026
+  </div>
+
+  <!-- Progress bar -->
+  <div style="margin-top:20px; display:flex; align-items:center; gap:12px;">
+    <div style="flex:1; height:3px; background:#111418; border-radius:2px; overflow:hidden;">
+      <div id="progress-fill" class="progress-fill" style="height:100%; background:linear-gradient(90deg,#22c55e,#16a34a); border-radius:2px; width:0%;"></div>
+    </div>
+    <div id="live-count" style="font-size:11px; color:#64748b; white-space:nowrap;">— / — live</div>
+  </div>
+
+  <!-- Filter pills -->
+  <div style="margin-top:16px; display:flex; gap:6px; flex-wrap:wrap;" id="filters"></div>
+</div>
+
+<div class="container" id="sections" style="display:flex; flex-direction:column; gap:28px;"></div>
+
+<!-- Legend -->
+<div class="container" style="margin-top:32px; padding:14px 18px; background:#0d1117; border:1px solid #1e2329; border-radius:6px;">
+  <div style="font-size:9px; color:#334155; letter-spacing:0.1em; margin-bottom:10px; font-weight:600;">STATUS KEY</div>
+  <div style="display:flex; flex-wrap:wrap; gap:8px 20px;" id="legend"></div>
+</div>
+
+<div class="container" style="margin-top:16px; font-size:10px; color:#1e2329; text-align:center; letter-spacing:0.08em;">
+  © 2026 ROW9 LLC · SKYBOX COMMAND CENTER · SYNTHESIZED FROM PARTS 0–10
+</div>
+
+<script>
+const SYSTEM_STATUS = [
+  {
+    category: "CORE INFRASTRUCTURE", color: "#22c55e",
+    items: [
+      { label: "Railway hosting (Node/Express + PostgreSQL)", status: "live", note: "command-center-api-production.up.railway.app" },
+      { label: "GitHub repo: CoachK2/athletics-command-center", status: "live", note: "Auto-deploys on push to main" },
+      { label: "Dashboard — color-coded confirmation status", status: "live", note: "Sport/status filters, officials slot counts" },
+      { label: "Skybox landing page", status: "live", note: "skybox-landing-production.up.railway.app" },
+      { label: "ROI calculator", status: "live", note: "/skybox-roi.html" },
+    ]
+  },
+  {
+    category: "CONFIRMATION EMAIL SYSTEM", color: "#3b82f6",
+    items: [
+      { label: "AgentMail inbox: fox_chapel_ad@agentmail.to", status: "live", note: "Inbox ID: am_us_b02a66" },
+      { label: "14 / 7 / 3-day send cadence", status: "live", note: "send_confirmations.py via `railway run`" },
+      { label: "Webhook reply parser — auto-updates DB status", status: "live", note: "Domain-based fallback matching" },
+      { label: "Sport keyword detection in subject line", status: "live", note: "Prevents multi-sport AD false confirms" },
+      { label: "Missy Whitfield CC on all outbound", status: "live", note: "melissa_whitfield@fcasd.edu" },
+      { label: "Secretary email import from WPIAL directory", status: "live", note: "Part 10 — 5 of 6 pilot opponents seeded; Mt Lebanon + Seton-La Salle gaps remain" },
+    ]
+  },
+  {
+    category: "ARBITER OFFICIALS SCRAPER", color: "#f97316",
+    items: [
+      { label: "Lacrosse scraper (GroupID 112675)", status: "live", note: "20 games — ARBITER_COOKIES_LACROSSE" },
+      { label: "Baseball scraper (GroupID 105667)", status: "live", note: "23 games — ARBITER_COOKIES_BASEBALL" },
+      { label: "Softball scraper (GroupID 107668)", status: "live", note: "12 games — ARBITER_COOKIES_SOFTBALL (requires fresh login with softball group active first)" },
+      { label: "55 total games updating officials status", status: "live", note: "Away games show 'Host assigns'" },
+      { label: "Per-sport cookies stored in Railway env vars", status: "live", note: "Expire frequently — manual refresh required" },
+      { label: "Puppeteer auto-login (cookie automation)", status: "planned", note: "Scoped but paused; Safari 14-day session is current workaround" },
+    ]
+  },
+  {
+    category: "SMS / TWILIO", color: "#a855f7",
+    items: [
+      { label: "Twilio A2P 10DLC registration", status: "pending", note: "Resubmitted 3/9 after error 30034 (missing CTA, blank Privacy Policy URLs). Typically 2–3 weeks; faster for resubmissions." },
+      { label: "Messaging service SID: MG4a255f46f866cbc0592de3890a35b5ad", status: "ready", note: "Phone: (412) 500-9040 — waiting on A2P approval to send" },
+      { label: "SMS notification engine (reusable)", status: "planned", note: "Any trigger, day interval, contact list type — blocked on A2P approval" },
+    ]
+  },
+  {
+    category: "POSTPONEMENT CHAIN", color: "#06b6d4",
+    items: [
+      { label: "Postponement contact list assembled", status: "partial", note: "JP Panos, Keith Gorse, Ron Urso, John McGee, Missy Whitfield, game workers list, opposing AD" },
+      { label: "Softball head coach confirmed", status: "pending", note: "Still TBD — needed to complete contact chain" },
+      { label: "Assignor contact confirmed", status: "pending", note: "Open Q for Mike: one person across sports or per-sport?" },
+      { label: "Officials cancellation flow", status: "defined", note: "Mike contacts assignor directly — NOT via Arbiter cancellation function" },
+      { label: "Postponement popup with official contact info", status: "planned", note: "Official data already in DB from Arbiter — needs surface in UI" },
+      { label: "Postponement blast (SMS + email)", status: "planned", note: "Blocked on SMS A2P + assignor contact" },
+    ]
+  },
+  {
+    category: "NEXT BUILD QUEUE", color: "#f59e0b",
+    items: [
+      { label: "Secretary escalation CC — 3-day non-responsive trigger", status: "planned", note: "Data seeded for 5 opponents; 2 gaps to fill with Mike" },
+      { label: "Secretary gap fill: Mt Lebanon + Seton-La Salle", status: "pending", note: "Ask Mike for direct contacts" },
+      { label: "Manual override magic link — missed AI detection", status: "planned", note: "Mobile-first; modeled on existing cancellation link" },
+      { label: "Confirmation notes field (per game, timestamped)", status: "planned", note: "Who / when / how — Mike's CYA log" },
+      { label: "Audit trail + exportable confirmation report", status: "planned", note: "Pat's core trust question — printable per-game record" },
+      { label: "Weather forecast link per game row", status: "discuss", note: "Away games need opponent city data — discuss with Mike + John first" },
+      { label: "Opponent website scraping (auto-confirm)", status: "roadmap", note: "Phase 2 — Mike proposed; not scoped yet" },
+    ]
+  },
+  {
+    category: "DAILY OPERATIONS", color: "#64748b",
+    items: [
+      { label: "Daily confirmation send: `railway run python3 send_confirmations.py`", status: "live", note: "From ~/athletics-command-center" },
+      { label: "Monday 8am recurring Google Calendar reminder", status: "live", note: "Weekly summary send to Mike + Missy" },
+      { label: "Arbiter cookie refresh (manual)", status: "live", note: "Cookies expire often — login, navigate to sport group, recapture from DevTools → Doc filter" },
+    ]
+  },
+];
+
+const STATUS_CONFIG = {
+  live:    { label: "LIVE",    color: "#22c55e", bg: "rgba(34,197,94,0.1)",   border: "rgba(34,197,94,0.25)",   desc: "deployed & running" },
+  partial: { label: "PARTIAL", color: "#f97316", bg: "rgba(249,115,22,0.1)",  border: "rgba(249,115,22,0.25)",  desc: "incomplete data/setup" },
+  pending: { label: "PENDING", color: "#f59e0b", bg: "rgba(245,158,11,0.1)",  border: "rgba(245,158,11,0.25)",  desc: "waiting on external" },
+  ready:   { label: "READY",   color: "#3b82f6", bg: "rgba(59,130,246,0.1)",  border: "rgba(59,130,246,0.25)",  desc: "built, not yet active" },
+  planned: { label: "PLANNED", color: "#a855f7", bg: "rgba(168,85,247,0.1)",  border: "rgba(168,85,247,0.25)",  desc: "scoped, not started" },
+  defined: { label: "DEFINED", color: "#06b6d4", bg: "rgba(6,182,212,0.1)",   border: "rgba(6,182,212,0.25)",   desc: "process confirmed, not automated" },
+  discuss: { label: "DISCUSS", color: "#64748b", bg: "rgba(100,116,139,0.1)", border: "rgba(100,116,139,0.25)", desc: "idea, needs stakeholder input" },
+  roadmap: { label: "ROADMAP", color: "#334155", bg: "rgba(51,65,85,0.15)",   border: "rgba(51,65,85,0.4)",     desc: "future phase" },
+};
+
+const FILTERS = ["all", "live", "pending", "planned", "partial", "roadmap"];
+let activeFilter = "all";
+
+function allItems() {
+  return SYSTEM_STATUS.flatMap(s => s.items);
+}
+
+function updateProgress() {
+  const items = allItems();
+  const live = items.filter(i => i.status === "live").length;
+  const total = items.length;
+  document.getElementById("progress-fill").style.width = `${(live / total) * 100}%`;
+  document.getElementById("live-count").textContent = `${live}/${total} live`;
+}
+
+function buildFilters() {
+  const container = document.getElementById("filters");
+  FILTERS.forEach(f => {
+    const cfg = f === "all"
+      ? { color: "#e2e8f0", bg: "rgba(226,232,240,0.08)", border: "rgba(226,232,240,0.15)" }
+      : STATUS_CONFIG[f];
+    const btn = document.createElement("div");
+    btn.className = "filter-btn";
+    btn.dataset.filter = f;
+    btn.textContent = f.toUpperCase();
+    btn.style.cssText = `font-size:9px; font-weight:600; letter-spacing:0.1em; padding:3px 10px; border-radius:3px; border:1px solid; transition:all 0.15s ease;`;
+    btn.addEventListener("click", () => {
+      activeFilter = f;
+      renderAll();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function styleFilterBtns() {
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    const f = btn.dataset.filter;
+    const cfg = f === "all"
+      ? { color: "#e2e8f0", bg: "rgba(226,232,240,0.08)", border: "rgba(226,232,240,0.15)" }
+      : STATUS_CONFIG[f];
+    const active = activeFilter === f;
+    btn.style.color = active ? cfg.color : "#334155";
+    btn.style.background = active ? cfg.bg : "transparent";
+    btn.style.borderColor = active ? cfg.border : "#1e2329";
+    btn.style.opacity = active ? "1" : "0.7";
+  });
+}
+
+function buildLegend() {
+  const container = document.getElementById("legend");
+  Object.entries(STATUS_CONFIG).forEach(([key, cfg]) => {
+    const el = document.createElement("div");
+    el.style.cssText = "display:flex; align-items:center; gap:6px;";
+    el.innerHTML = `
+      <div style="width:6px;height:6px;border-radius:50%;background:${cfg.color};flex-shrink:0;"></div>
+      <span style="font-size:9px;color:#475569;letter-spacing:0.06em;">${cfg.label}</span>
+      <span style="font-size:9px;color:#1e2329;">—</span>
+      <span style="font-size:9px;color:#334155;">${cfg.desc}</span>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function renderAll() {
+  styleFilterBtns();
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+
+  SYSTEM_STATUS.forEach(section => {
+    const visible = section.items.filter(i => activeFilter === "all" || i.status === activeFilter);
+    if (visible.length === 0) return;
+
+    const liveCount = section.items.filter(i => i.status === "live").length;
+    const sectionEl = document.createElement("div");
+
+    // Section header
+    const header = document.createElement("div");
+    header.style.cssText = "display:flex; align-items:center; gap:10px; margin-bottom:8px;";
+    header.innerHTML = `
+      <div style="width:8px;height:8px;border-radius:50%;background:${section.color};flex-shrink:0;"></div>
+      <div style="font-size:9px;color:#475569;letter-spacing:0.12em;font-weight:600;">${section.category}</div>
+      <div style="flex:1;height:1px;background:#111418;"></div>
+      <div style="font-size:9px;color:#334155;">${liveCount}/${section.items.length} live</div>
+    `;
+    sectionEl.appendChild(header);
+
+    // Items
+    const itemsEl = document.createElement("div");
+    itemsEl.style.cssText = "display:flex; flex-direction:column; gap:4px;";
+
+    visible.forEach((item, idx) => {
+      const cfg = STATUS_CONFIG[item.status];
+      const rowKey = section.category + idx;
+
+      const row = document.createElement("div");
+      row.className = "status-row";
+      row.style.cssText = "background:#0d1117; border:1px solid #1e2329; border-radius:5px; padding:10px 14px;";
+
+      const top = document.createElement("div");
+      top.style.cssText = "display:flex; align-items:center; gap:10px;";
+      top.innerHTML = `
+        <div style="font-size:8px;font-weight:700;letter-spacing:0.1em;color:${cfg.color};background:${cfg.bg};border:1px solid ${cfg.border};padding:2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0;min-width:54px;text-align:center;">${cfg.label}</div>
+        <div class="sans" style="font-size:12px;font-weight:500;color:#94a3b8;flex:1;line-height:1.4;">${item.label}</div>
+        <div class="chevron" style="font-size:9px;color:#334155;">▼</div>
+      `;
+
+      const detail = document.createElement("div");
+      detail.className = "expand-detail";
+      detail.style.cssText = `margin-top:8px; padding-left:64px; font-size:11px; color:#475569; font-family:'IBM Plex Sans',sans-serif; line-height:1.6; border-left:2px solid ${cfg.border}; padding-bottom:2px;`;
+      detail.textContent = item.note;
+
+      row.appendChild(top);
+      row.appendChild(detail);
+
+      row.addEventListener("click", () => {
+        const isOpen = detail.classList.contains("open");
+        detail.classList.toggle("open", !isOpen);
+        top.querySelector(".chevron").classList.toggle("open", !isOpen);
+      });
+
+      itemsEl.appendChild(row);
+    });
+
+    sectionEl.appendChild(itemsEl);
+    container.appendChild(sectionEl);
+  });
+}
+
+// Init
+updateProgress();
+buildFilters();
+buildLegend();
+renderAll();
+</script>
+</body>
+</html>
