@@ -4,224 +4,285 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skybox: Athletics Command Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #0A0F1E;
-    --navy2: #0F1628;
-    --steel: #1B2444;
-    --electric: #00D4FF;
-    --electric2: #0099BB;
-    --white: #F0F4FF;
-    --gray: #8892AA;
-    --accent: #FF6B35;
-  }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+<!-- OG / Social -->
+<meta property="og:title" content="Skybox: Athletics Command Center" />
+<meta property="og:description" content="Athletic directors don't need another platform to log into. They need someone who logs in for them. Spring 2026 pilots now open." />
+<meta property="og:url" content="https://skybox-landing-production.up.railway.app" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://skybox-landing-production.up.railway.app/skybox-og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Skybox: Athletics Command Center" />
+<meta name="twitter:description" content="Athletic directors don't need another platform to log into. They need someone who logs in for them. Spring 2026 pilots now open." />
+<meta name="twitter:image" content="https://skybox-landing-production.up.railway.app/skybox-og-image.png" />
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0b0f19;
+    --bg: #05080f;
+    --surface: #0f1520;
+    --surface2: #151d2e;
+    --gold: #FFD200;
+    --orange: #FF6B00;
+    --blue: #3b82f6;
+    --muted: rgba(255,255,255,0.45);
+    --border: rgba(255,255,255,0.08);
+    --red: #e84040;
+  }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--navy);
-    color: var(--white);
+    background: var(--bg);
+    color: #e8eaf0;
     font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
     overflow-x: hidden;
   }
 
-  /* GRID OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: 
-      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
+  /* ── NAV ── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 20px 60px;
+    background: rgba(5,8,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 64px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(10,15,30,0.95), transparent);
+    justify-content: space-between;
   }
 
   .nav-logo {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 22px;
     letter-spacing: 3px;
-    color: var(--electric);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
   }
 
-  .nav-logo span { color: var(--white); }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: #fff; }
 
   .nav-cta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--navy);
-    background: var(--electric);
-    padding: 10px 24px;
+    background: var(--gold) !important;
+    color: var(--ink) !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 700 !important;
+    font-size: 14px !important;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: opacity 0.2s !important;
   }
 
-  .nav-cta:hover { background: var(--white); }
+  .nav-cta:hover { opacity: 0.9; }
 
-  /* HERO */
+  /* ── TOP BAR ── */
+  .top-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--orange));
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+  }
+
+  /* ── HERO ── */
   .hero {
-    position: relative;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 120px 60px 80px;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .hero-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--electric);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .hero-badge::before {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--electric);
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, #4af 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, #4af 60px);
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 1000px; height: 700px;
+    background: radial-gradient(ellipse at center top, rgba(255,210,0,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 600px; height: 500px;
+    background: radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .pilot-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,210,0,0.08);
+    border: 1px solid rgba(255,210,0,0.25);
+    border-radius: 40px;
+    padding: 8px 18px;
+    margin-bottom: 32px;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .pilot-badge .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
   }
 
   .hero h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(72px, 10vw, 160px);
-    line-height: 0.9;
+    font-size: clamp(72px, 10vw, 130px);
+    line-height: 0.88;
+    color: #fff;
     letter-spacing: 2px;
-    margin-bottom: 8px;
+    margin-bottom: 32px;
   }
 
-  .hero h1 .electric { color: var(--electric); }
-  .hero h1 .dim { color: var(--gray); }
+  .hero h1 span { color: var(--gold); }
 
   .hero-sub {
-    font-size: clamp(16px, 2vw, 22px);
+    font-size: clamp(18px, 2.5vw, 22px);
+    color: rgba(255,255,255,0.65);
+    max-width: 620px;
+    margin: 0 auto 48px;
     font-weight: 300;
-    color: var(--gray);
-    margin-top: 32px;
-    max-width: 540px;
     line-height: 1.6;
   }
 
-  .hero-sub em {
-    color: var(--white);
-    font-style: normal;
-    font-weight: 500;
-  }
+  .hero-sub strong { color: #fff; font-weight: 500; }
 
-  .hero-actions {
+  .hero-ctas {
     display: flex;
     gap: 16px;
-    margin-top: 48px;
+    justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: 72px;
   }
 
   .btn-primary {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--navy);
-    background: var(--electric);
+    background: var(--gold);
+    color: var(--ink);
     padding: 16px 36px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
     text-decoration: none;
-    transition: all 0.2s;
-    position: relative;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-block;
   }
 
-  .btn-primary:hover {
-    background: var(--white);
-    transform: translateY(-2px);
-  }
+  .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
 
   .btn-secondary {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--electric);
-    border: 1px solid var(--electric);
+    background: transparent;
+    color: #fff;
     padding: 16px 36px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
     text-decoration: none;
-    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
   }
 
   .btn-secondary:hover {
-    background: rgba(0,212,255,0.08);
-    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.04);
   }
 
-  /* HERO VISUAL */
-  .hero-visual {
-    position: absolute;
-    right: -60px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50%;
-    max-width: 700px;
-    opacity: 0.12;
-    pointer-events: none;
-  }
-
-  .hero-visual svg { width: 100%; }
-
-  /* TICKER */
-  .ticker {
+  /* ── TICKER ── */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 14px 0;
     position: relative;
     z-index: 1;
-    border-top: 1px solid rgba(0,212,255,0.15);
-    border-bottom: 1px solid rgba(0,212,255,0.15);
-    padding: 16px 0;
-    overflow: hidden;
-    background: rgba(0,212,255,0.03);
   }
 
-  .ticker-inner {
+  .ticker-track {
     display: flex;
-    gap: 60px;
-    animation: ticker 20s linear infinite;
-    white-space: nowrap;
+    gap: 0;
+    animation: ticker 28s linear infinite;
+    width: max-content;
   }
 
   .ticker-item {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--electric);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 40px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    flex-shrink: 0;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
   }
 
-  .ticker-item::before {
-    content: '//';
-    margin-right: 12px;
-    color: var(--gray);
+  .ticker-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
   }
 
   @keyframes ticker {
@@ -229,603 +290,686 @@
     to { transform: translateX(-50%); }
   }
 
-  /* SECTION BASE */
+  /* ── SECTIONS ── */
   section {
-    position: relative;
-    z-index: 1;
-    padding: 100px 60px;
+    padding: 96px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
 
-  .section-label {
-    font-family: 'DM Mono', monospace;
+  .section-eyebrow {
     font-size: 11px;
-    letter-spacing: 3px;
+    font-weight: 700;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--electric);
-    margin-bottom: 48px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    color: var(--gold);
+    margin-bottom: 16px;
   }
 
-  .section-label::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--electric);
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 0.92;
+    color: #fff;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
   }
 
-  /* PAIN SECTION */
-  .pain {
-    background: var(--navy2);
+  .section-title span { color: var(--gold); }
+
+  .section-body {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    max-width: 600px;
+    line-height: 1.65;
+    font-weight: 300;
   }
 
+  .section-body strong { color: #fff; font-weight: 500; }
+
+  /* ── PAIN POINTS ── */
   .pain-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 16px;
-  }
-
-  .pain-item {
-    background: var(--steel);
-    padding: 36px 40px;
-    border-left: 3px solid transparent;
-    transition: border-color 0.2s;
-  }
-
-  .pain-item:hover { border-left-color: var(--electric); }
-
-  .pain-item p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--gray);
-  }
-
-  .pain-item p::before {
-    content: '— ';
-    color: var(--accent);
-  }
-
-  /* HOW IT WORKS */
-  .how-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(40px, 5vw, 72px);
-    letter-spacing: 2px;
-    margin-bottom: 64px;
-    line-height: 1;
-  }
-
-  .how-title span { color: var(--electric); }
-
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-  }
-
-  .step {
-    background: var(--steel);
-    padding: 48px 36px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .step::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--electric), transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-
-  .step:hover::after { transform: scaleX(1); }
-
-  .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 80px;
-    color: rgba(0,212,255,0.08);
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-
-  .step h3 {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    font-size: 15px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    color: var(--white);
-  }
-
-  .step p {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--gray);
-  }
-
-  /* MATH */
-  .math {
-    background: var(--navy2);
-  }
-
-  .math-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-
-  .stat {
-    background: var(--steel);
-    padding: 60px 48px;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 80px;
-    color: var(--electric);
-    line-height: 1;
-    display: block;
-  }
-
-  .stat-label {
-    font-size: 13px;
-    color: var(--gray);
-    margin-top: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.5px;
-  }
-
-  /* PILOT */
-  .pilot-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
     margin-top: 48px;
   }
 
-  .pilot-col {
-    background: var(--steel);
-    padding: 52px 48px;
-  }
-
-  .pilot-col h3 {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--electric);
-    margin-bottom: 32px;
-  }
-
-  .pilot-list {
-    list-style: none;
+  .pain-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 20px 24px;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color 0.2s, background 0.2s;
   }
 
-  .pilot-list li {
+  .pain-card:hover {
+    background: var(--surface2);
+    border-left-color: var(--gold);
+  }
+
+  .pain-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pain-card p {
     font-size: 15px;
-    color: var(--gray);
-    padding-left: 20px;
-    position: relative;
+    color: rgba(255,255,255,0.7);
     line-height: 1.5;
   }
 
-  .pilot-list li::before {
-    content: '+';
-    position: absolute;
-    left: 0;
-    color: var(--electric);
-    font-weight: 500;
+  /* ── HOW IT WORKS ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px;
+    margin-top: 48px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
   }
 
-  /* CTA SECTION */
-  .cta-section {
-    background: var(--electric);
-    text-align: center;
-    padding: 100px 60px;
+  .step-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+    transition: background 0.2s;
   }
 
-  .cta-section .section-label { justify-content: center; color: var(--navy2); }
-  .cta-section .section-label::before { background: var(--navy2); }
+  .step-card:hover { background: var(--surface2); }
 
-  .cta-section h2 {
+  .step-num {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(40px, 6vw, 88px);
-    letter-spacing: 2px;
-    color: var(--navy);
+    font-size: 56px;
+    color: rgba(255,210,0,0.15);
     line-height: 1;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
-  .cta-section p {
-    font-size: 16px;
-    color: var(--navy2);
-    margin-bottom: 48px;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
+  .step-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
   }
 
-  .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-
-  .btn-dark {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--electric);
-    background: var(--navy);
-    padding: 16px 36px;
-    text-decoration: none;
-    transition: all 0.2s;
+  .step-body {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
   }
 
-  .btn-dark:hover { background: var(--navy2); transform: translateY(-2px); }
-
-  .btn-outline-dark {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--navy);
-    border: 2px solid var(--navy);
-    padding: 16px 36px;
-    text-decoration: none;
-    transition: all 0.2s;
+  .step-accent {
+    position: absolute;
+    top: 28px; right: 28px;
+    font-size: 22px;
+    opacity: 0.6;
   }
 
-  .btn-outline-dark:hover { background: rgba(10,15,30,0.1); transform: translateY(-2px); }
-
-  /* QUOTE */
-  .quote-section {
-    padding: 100px 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* ── ROI STATS ── */
+  .roi-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 64px 48px;
+    margin: 0 0 0 0;
   }
 
-  blockquote {
-    max-width: 800px;
+  .roi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    margin-top: 48px;
+  }
+
+  .roi-stat {
     text-align: center;
   }
 
-  blockquote p {
-    font-size: clamp(18px, 2.5vw, 26px);
-    line-height: 1.6;
-    color: var(--gray);
-    font-style: italic;
-    margin-bottom: 24px;
+  .roi-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
   }
 
-  blockquote p em { color: var(--white); font-style: normal; }
-
-  blockquote cite {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--electric);
-    text-transform: uppercase;
+  .roi-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
   }
 
-  /* CREDENTIALS */
-  .cred {
-    background: var(--navy2);
+  .roi-divider {
+    width: 1px;
+    background: var(--border);
   }
 
-  .cred-grid {
+  /* ── WHAT'S INCLUDED ── */
+  .included-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 16px;
+    gap: 24px;
+    margin-top: 48px;
   }
 
-  .cred-item {
-    background: var(--steel);
-    padding: 52px 48px;
+  .included-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
   }
 
-  .cred-item h3 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+  .included-card-title {
+    font-size: 11px;
+    font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--electric);
+    color: var(--gold);
     margin-bottom: 20px;
   }
 
-  .cred-item p {
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--gray);
+  .included-list {
+    list-style: none;
   }
 
-  .cred-item p strong { color: var(--white); font-weight: 500; }
-
-  /* INTEGRATIONS */
-  .integrations {
-    border-top: 1px solid rgba(0,212,255,0.1);
-    padding: 48px 60px;
+  .included-list li {
     display: flex;
-    gap: 24px;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
   }
 
-  .int-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gray);
+  .included-list li:last-child { border-bottom: none; }
+
+  .included-list li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
     flex-shrink: 0;
   }
 
-  .int-tags {
+  /* ── INTEGRATIONS ── */
+  .integrations-grid {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .integration-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .integration-chip:hover {
+    border-color: rgba(255,210,0,0.3);
+    color: #fff;
+  }
+
+  /* ── CREDIBILITY ── */
+  .cred-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .cred-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .cred-card-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .cred-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .cred-card p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.65;
+  }
+
+  /* ── QUOTE ── */
+  .quote-section {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 12px;
+    padding: 48px 56px;
+    margin: 0;
+  }
+
+  .quote-text {
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-style: italic;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .quote-cite {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── ARBITER CALLOUT ── */
+  .arbiter-callout {
+    background: linear-gradient(135deg, rgba(255,210,0,0.06), rgba(255,107,0,0.06));
+    border: 1px solid rgba(255,210,0,0.2);
+    border-radius: 12px;
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .arbiter-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+  }
+
+  .arbiter-content h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .arbiter-content p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.55;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    text-align: center;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 96px 40px;
+  }
+
+  .cta-section .section-title {
+    margin-bottom: 16px;
+  }
+
+  .cta-section .section-body {
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
     flex-wrap: wrap;
   }
 
-  .int-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    padding: 6px 14px;
-    border: 1px solid rgba(0,212,255,0.2);
-    color: var(--gray);
-    text-transform: uppercase;
-  }
-
-  /* FOOTER */
+  /* ── FOOTER ── */
   footer {
-    padding: 40px 60px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 40px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(0,212,255,0.1);
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
   }
 
-  footer p {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--gray);
-    text-transform: uppercase;
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.4);
   }
 
-  /* FADE IN ANIMATIONS */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  .footer-logo span { color: rgba(255,210,0,0.5); }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
   }
 
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .footer-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+    transition: color 0.2s;
   }
 
-  @media (max-width: 900px) {
-    nav { padding: 20px 24px; }
-    section { padding: 72px 24px; }
-    .hero { padding: 120px 24px 72px; }
-    .pain-grid, .steps, .math-grid, .pilot-grid, .cred-grid { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .integrations { padding: 40px 24px; }
-    footer { padding: 32px 24px; flex-direction: column; gap: 16px; text-align: center; }
-    .cta-section { padding: 72px 24px; }
+  .footer-links a:hover { color: rgba(255,255,255,0.6); }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 64px 24px; }
+    .roi-grid { grid-template-columns: 1fr; gap: 32px; }
+    .roi-divider { display: none; }
+    .included-grid, .cred-grid { grid-template-columns: 1fr; }
+    .arbiter-callout { flex-direction: column; text-align: center; }
+    footer { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
 <body>
 
+<div class="top-bar"></div>
+
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">SKYBOX<span>:AC</span></div>
-  <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="nav-cta">Schedule Call</a>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">🏟</div>
+    <span>SKY</span>BOX<span style="color:rgba(255,255,255,0.3); margin: 0 4px;">:</span><span style="font-size:16px; letter-spacing:2px;">AC</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#roi">The Math</a>
+    <a href="#pilot">Pilot Program</a>
+    <a href="#integrations">Integrations</a>
+    <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" class="nav-cta">Schedule a Call</a>
+  </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">Spring 2026 Pilot — Now Accepting Applications</div>
-  <h1>
-    <span class="dim">ATHLETICS</span><br>
-    <span class="electric">COMMAND</span><br>
-    CENTER
-  </h1>
+<section class="hero" style="max-width:100%; padding-top:140px;">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="pilot-badge">
+    <div class="dot"></div>
+    Spring 2026 Pilot — Now Accepting Applications
+  </div>
+
+  <h1>WE RUN<br>YOUR <span>OPERATIONS.</span><br>PERIOD.</h1>
+
   <p class="hero-sub">
     Athletic directors don't need another platform to log into.<br>
-    They need someone who logs in <em>for them.</em>
+    They need someone who logs in <strong>for them.</strong>
   </p>
-  <div class="hero-actions">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" class="btn-primary">Apply for Pilot</a>
-    <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="btn-secondary">Schedule Discovery Call</a>
+
+  <div class="hero-ctas">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank" class="btn-primary">Apply for Pilot</a>
+    <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" class="btn-secondary">Schedule Discovery Call</a>
   </div>
 </section>
 
 <!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
-    <span class="ticker-item">Game Confirmations Handled</span>
-    <span class="ticker-item">Weather Monitoring</span>
-    <span class="ticker-item">Postponement Notifications</span>
-    <span class="ticker-item">Facility Conflict Detection</span>
-    <span class="ticker-item">Bus Coordination</span>
-    <span class="ticker-item">Officials Communication</span>
-    <span class="ticker-item">Parent Notifications</span>
-    <span class="ticker-item">10+ Hours Saved Weekly</span>
-    <span class="ticker-item">Game Confirmations Handled</span>
-    <span class="ticker-item">Weather Monitoring</span>
-    <span class="ticker-item">Postponement Notifications</span>
-    <span class="ticker-item">Facility Conflict Detection</span>
-    <span class="ticker-item">Bus Coordination</span>
-    <span class="ticker-item">Officials Communication</span>
-    <span class="ticker-item">Parent Notifications</span>
-    <span class="ticker-item">10+ Hours Saved Weekly</span>
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <!-- first copy -->
+    <div class="ticker-item"><div class="ticker-dot"></div>Game Confirmations Handled</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Weather Monitoring</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Postponement Notifications</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Facility Conflict Detection</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Bus Coordination</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Officials Communication</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Parent Notifications</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>10+ Hours Saved Weekly</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Arbiter Integration</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>BigTeams Integration</div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item"><div class="ticker-dot"></div>Game Confirmations Handled</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Weather Monitoring</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Postponement Notifications</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Facility Conflict Detection</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Bus Coordination</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Officials Communication</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Parent Notifications</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>10+ Hours Saved Weekly</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Arbiter Integration</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>BigTeams Integration</div>
   </div>
 </div>
 
-<!-- PAIN -->
-<section class="pain">
-  <div class="section-label fade-in">Sound Familiar?</div>
+<!-- PAIN POINTS -->
+<div class="divider"></div>
+<section id="pain">
+  <div class="section-eyebrow">Sound Familiar?</div>
+  <div class="section-title">THE DAILY GRIND<br>THAT <span>SHOULDN'T</span> BE YOURS</div>
+  <p class="section-body">You became an AD to lead programs and develop athletes — not to manage an endless communication cascade. Sound familiar?</p>
+
   <div class="pain-grid">
-    <div class="pain-item fade-in"><p>Chasing game confirmations by email thread</p></div>
-    <div class="pain-item fade-in"><p>Manually notifying buses, officials, parents when a game moves</p></div>
-    <div class="pain-item fade-in"><p>Facility conflicts discovered the day of the event</p></div>
-    <div class="pain-item fade-in"><p>Weather decisions with no documentation trail</p></div>
-    <div class="pain-item fade-in"><p>25%+ of opponents not in your scheduling system</p></div>
-    <div class="pain-item fade-in"><p>Hours each week on communication cascades, not leadership</p></div>
+    <div class="pain-card"><div class="pain-icon">📧</div><p>Chasing game confirmations by email thread with no single source of truth</p></div>
+    <div class="pain-card"><div class="pain-icon">🚌</div><p>Manually notifying buses, officials, and parents every time a game moves</p></div>
+    <div class="pain-card"><div class="pain-icon">🏟</div><p>Facility conflicts discovered the day of the event — not the week before</p></div>
+    <div class="pain-card"><div class="pain-icon">🌩</div><p>Weather decisions with no documentation trail and no system to cascade them</p></div>
+    <div class="pain-card"><div class="pain-icon">📋</div><p>25%+ of opponents not in your scheduling system, requiring manual lookup</p></div>
+    <div class="pain-card"><div class="pain-icon">⏱</div><p>Hours each week on communication cascades that should take minutes</p></div>
+  </div>
+
+  <!-- Arbiter callout -->
+  <div class="arbiter-callout">
+    <div class="arbiter-icon">⚡</div>
+    <div class="arbiter-content">
+      <h3>Arbiter Migration Coming — Are You Ready?</h3>
+      <p>Schools across the country are navigating the shift away from legacy scheduling platforms. Skybox pilots are already integrated with Arbiter and ready to absorb the transition friction — so you don't have to manage it alone. <strong>IYKYK.</strong></p>
+    </div>
   </div>
 </section>
+
+<div class="divider"></div>
 
 <!-- HOW IT WORKS -->
-<section>
-  <div class="section-label fade-in">How It Works</div>
-  <h2 class="how-title fade-in">We Run Your<br><span>Operations.</span></h2>
-  <div class="steps">
-    <div class="step fade-in">
+<section id="how-it-works">
+  <div class="section-eyebrow">How It Works</div>
+  <div class="section-title">WE RUN YOUR<br><span>BOOTH.</span></div>
+  <p class="section-body">Not another tool. Not another login. A team embedded in your existing platforms, running operations daily.</p>
+
+  <div class="steps-grid">
+    <div class="step-card">
       <div class="step-num">01</div>
-      <h3>We Map Your Operation</h3>
-      <p>We document your full workflow: confirmations, facility schedules, notification chains, weather protocols.</p>
+      <div class="step-accent">🗺</div>
+      <div class="step-title">We Map Your Operation</div>
+      <p class="step-body">We document your full workflow: confirmations, facility schedules, notification chains, weather protocols. We learn your program before we touch anything.</p>
     </div>
-    <div class="step fade-in">
+    <div class="step-card">
       <div class="step-num">02</div>
-      <h3>We Connect Your Platforms</h3>
-      <p>We integrate with the tools you already use. No new software for you or your coaches.</p>
+      <div class="step-accent">🔌</div>
+      <div class="step-title">We Connect Your Platforms</div>
+      <p class="step-body">We integrate with the tools you already use — Arbiter, BigTeams, rSchool, Google Workspace. No new software for you or your coaches.</p>
     </div>
-    <div class="step fade-in">
+    <div class="step-card">
       <div class="step-num">03</div>
-      <h3>We Run Daily Ops</h3>
-      <p>Trained operators + AI monitor everything continuously. Confirmations, weather, conflicts: handled.</p>
+      <div class="step-accent">⚙️</div>
+      <div class="step-title">We Run Daily Ops</div>
+      <p class="step-body">Trained operators + AI monitor everything continuously. Confirmations, weather, conflicts, parent notifications: handled. Before you even open your laptop.</p>
     </div>
-    <div class="step fade-in">
+    <div class="step-card">
       <div class="step-num">04</div>
-      <h3>You See Green or Decide</h3>
-      <p>Log in once. Either everything's handled, or we surface the 2–3 things that need your call.</p>
+      <div class="step-accent">✅</div>
+      <div class="step-title">You See Green or Decide</div>
+      <p class="step-body">Log in once a day. Either everything is handled, or we surface the 2–3 things that genuinely need your call. That's it.</p>
     </div>
   </div>
 </section>
 
-<!-- MATH -->
-<section class="math">
-  <div class="section-label fade-in">The Math</div>
-  <div class="math-grid">
-    <div class="stat fade-in">
-      <span class="stat-num">10+</span>
-      <p class="stat-label">Hours per week saved<br>during spring season</p>
-    </div>
-    <div class="stat fade-in">
-      <span class="stat-num">160</span>
-      <p class="stat-label">Hours of AD time<br>consumed per spring</p>
-    </div>
-    <div class="stat fade-in">
-      <span class="stat-num">$6.5K</span>
-      <p class="stat-label">Value of reclaimed AD time<br>at avg. salary rate</p>
+<div class="divider"></div>
+
+<!-- ROI -->
+<section id="roi" style="padding-bottom: 0;">
+  <div class="roi-section">
+    <div class="section-eyebrow">The Math</div>
+    <div class="section-title">TIME IS THE <span>ASSET.</span><br>WE GIVE IT BACK.</div>
+    <div class="roi-grid">
+      <div class="roi-stat">
+        <div class="roi-num">10+</div>
+        <div class="roi-label">Hours per week saved<br>during spring season</div>
+      </div>
+      <div class="roi-divider"></div>
+      <div class="roi-stat">
+        <div class="roi-num">160</div>
+        <div class="roi-label">Hours of AD time consumed<br>each spring by ops tasks</div>
+      </div>
+      <div class="roi-divider"></div>
+      <div class="roi-stat">
+        <div class="roi-num">$6.5K</div>
+        <div class="roi-label">Value of reclaimed AD time<br>at average salary rate</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PILOT -->
-<section>
-  <div class="section-label fade-in">Spring 2026 Pilot — Limited Spots Available</div>
-  <div class="pilot-grid">
-    <div class="pilot-col fade-in">
-      <h3>What's Included</h3>
-      <ul class="pilot-list">
-        <li>Full platform integration</li>
-        <li>Workflow documentation</li>
+<div class="divider" style="margin-top: 96px;"></div>
+
+<!-- PILOT PROGRAM -->
+<section id="pilot">
+  <div class="section-eyebrow">Spring 2026 Pilot — Limited Spots</div>
+  <div class="section-title">WHAT YOU<br><span>GET.</span></div>
+
+  <div class="included-grid">
+    <div class="included-card">
+      <div class="included-card-title">What's Included</div>
+      <ul class="included-list">
+        <li>Full platform integration (Arbiter, BigTeams, rSchool)</li>
+        <li>Complete workflow documentation</li>
         <li>Dedicated operator support</li>
-        <li>Covers up to 5 spring teams</li>
-        <li>Weather monitoring</li>
+        <li>Covers up to 5 spring sport teams</li>
+        <li>Real-time weather monitoring</li>
         <li>Parent communication workflows</li>
+        <li>Game confirmation tracking dashboard</li>
+        <li>Postponement cascade management</li>
       </ul>
     </div>
-    <div class="pilot-col fade-in">
-      <h3>Pilot Schools Receive</h3>
-      <ul class="pilot-list">
-        <li>Priority onboarding</li>
+    <div class="included-card">
+      <div class="included-card-title">Pilot Schools Also Receive</div>
+      <ul class="included-list">
+        <li>Priority onboarding — we're in your corner from day one</li>
         <li>Direct input on product direction</li>
-        <li>Preferred pricing for year two</li>
+        <li>Preferred pricing locked in for year two</li>
         <li>Dedicated case study support</li>
         <li>First access to new integrations</li>
+        <li>Money-back guarantee if we don't deliver</li>
+        <li>Direct line to the founding team</li>
+        <li>NFHS network referral eligibility</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- QUOTE -->
-<section class="quote-section">
-  <blockquote class="fade-in">
-    <p>"ADs spend enormous energy being the switchboard: confirmations, weather calls, facility conflicts, parent emails. None of that is <em>athletic leadership.</em> We built this so ADs can actually lead their programs instead of managing information."</p>
-    <cite>Coach — Skybox: Athletics Command Center</cite>
-  </blockquote>
+<div class="divider"></div>
+
+<!-- INTEGRATIONS -->
+<section id="integrations">
+  <div class="section-eyebrow">Integrations</div>
+  <div class="section-title">WE WORK<br>IN YOUR <span>STACK.</span></div>
+  <p class="section-body">No new platforms. No change management. We embed into the tools you already use and run operations from inside them.</p>
+
+  <div class="integrations-grid">
+    <div class="integration-chip">🏆 Arbiter Sports</div>
+    <div class="integration-chip">📅 BigTeams / Schedule Star</div>
+    <div class="integration-chip">📋 rSchool</div>
+    <div class="integration-chip">📂 Google Workspace</div>
+    <div class="integration-chip">🌦 Perry Weather</div>
+    <div class="integration-chip">📡 NFHS Network</div>
+    <div class="integration-chip">🎟 HomeTown Ticketing</div>
+    <div class="integration-chip">🎥 HUDL</div>
+    <div class="integration-chip">📱 Twilio SMS</div>
+    <div class="integration-chip">📬 SendGrid Email</div>
+  </div>
 </section>
 
-<!-- CREDENTIALS -->
-<section class="cred">
-  <div class="section-label fade-in">Built By ADs, For ADs</div>
+<div class="divider"></div>
+
+<!-- QUOTE -->
+<section style="padding-top: 64px; padding-bottom: 64px;">
+  <div class="quote-section">
+    <p class="quote-text">"ADs spend enormous energy being the switchboard: confirmations, weather calls, facility conflicts, parent emails. None of that is athletic leadership. We built Skybox so ADs can actually lead their programs instead of managing information."</p>
+    <div class="quote-cite">Coach Kerry Keating — Founder, Skybox: Athletics Command Center</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CREDIBILITY -->
+<section>
+  <div class="section-eyebrow">Built By ADs, For ADs</div>
+  <div class="section-title">WE KNOW<br>THE <span>JOB.</span></div>
+
   <div class="cred-grid">
-    <div class="cred-item fade-in">
-      <h3>Athletics Credibility</h3>
-      <p>Founded by a <strong>former Division I assistant and head coach</strong> with over a decade of experience at the high school and college level, currently serving as an AD. We understand the job from the inside.</p>
+    <div class="cred-card">
+      <div class="cred-card-eyebrow">Athletics Credibility</div>
+      <h3>From the Inside Out</h3>
+      <p>Founded by a former Division I assistant and head coach with over a decade of experience at the high school and college level, currently serving as an AD. We understand the operational reality of this job — not from the outside looking in, but from inside the building.</p>
     </div>
-    <div class="cred-item fade-in">
-      <h3>Enterprise-Grade Technology</h3>
-      <p>Built by the same team behind <strong>Layup</strong>, the AI platform powering video analysis for programs including <strong>BYU and Stanford basketball.</strong> The same expertise, now purpose-built for high school athletic operations.</p>
+    <div class="cred-card">
+      <div class="cred-card-eyebrow">Enterprise-Grade Technology</div>
+      <h3>Powered by Proven AI Infrastructure</h3>
+      <p>Built by the same team behind <strong style="color:#fff;">Layup</strong>, the AI platform powering video analysis for programs including BYU and Stanford basketball. The same infrastructure and expertise, purpose-built for high school athletic operations.</p>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta-section">
-  <div class="section-label">Ready to Get Started?</div>
-  <h2>STOP MANAGING.<br>START LEADING.</h2>
-  <p>Spots are limited for Spring 2026. Reach out to learn about onboarding and get a custom fit for your program.</p>
-  <div class="cta-btns">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" class="btn-dark">Fill Out Our Survey</a>
-    <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="btn-outline-dark">Schedule Discovery Call</a>
-  </div>
-</section>
-
-<!-- INTEGRATIONS -->
-<div class="integrations">
-  <span class="int-label">Integrates With</span>
-  <div class="int-tags">
-    <span class="int-tag">Arbiter Sports</span>
-    <span class="int-tag">Big Teams</span>
-    <span class="int-tag">Schedule Star</span>
-    <span class="int-tag">rSchool</span>
-    <span class="int-tag">Google Workspace</span>
-    <span class="int-tag">Perry Weather</span>
-    <span class="int-tag">NFHS Network</span>
+<div class="cta-section">
+  <div class="section-eyebrow">Spring 2026 · Limited Availability</div>
+  <div class="section-title" style="font-size: clamp(42px, 6vw, 80px);">STOP MANAGING.<br><span>START LEADING.</span></div>
+  <p class="section-body">Spots are limited for Spring 2026. One discovery call is all it takes to find out if Skybox is the right fit for your program.</p>
+  <div class="cta-buttons">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank" class="btn-primary">Fill Out Our Survey</a>
+    <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" class="btn-secondary">Schedule Discovery Call</a>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2026 Skybox: Athletics Command Center — A Row9 LLC Product</p>
-  <p>Spring 2026 Pilot — Limited Availability</p>
+  <div class="footer-logo"><span>SKY</span>BOX : AC</div>
+  <div class="footer-links">
+    <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank">Schedule a Call</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank">Apply</a>
+  </div>
+  <div class="footer-copy">© 2026 Skybox: Athletics Command Center — A Row9 LLC Product</div>
 </footer>
-
-<script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-</script>
 
 </body>
 </html>
