@@ -135,6 +135,7 @@
     position: absolute;
     inset: 0;
     opacity: 0.04;
+    pointer-events: none;
     background-image:
       repeating-linear-gradient(0deg, transparent, transparent 59px, #4af 60px),
       repeating-linear-gradient(90deg, transparent, transparent 59px, #4af 60px);
@@ -158,6 +159,8 @@
   }
 
   .pilot-badge {
+    position: relative;
+    z-index: 10;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -185,6 +188,8 @@
   }
 
   .hero h1 {
+    position: relative;
+    z-index: 10;
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(72px, 10vw, 130px);
     line-height: 0.88;
@@ -196,6 +201,8 @@
   .hero h1 span { color: var(--gold); }
 
   .hero-sub {
+    position: relative;
+    z-index: 10;
     font-size: clamp(18px, 2.5vw, 22px);
     color: rgba(255,255,255,0.65);
     max-width: 620px;
@@ -212,6 +219,8 @@
     justify-content: center;
     flex-wrap: wrap;
     margin-bottom: 72px;
+    position: relative;
+    z-index: 10;
   }
 
   .btn-primary {
@@ -504,7 +513,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 40px;
+    margin-top: 16px;
   }
 
   .integration-chip {
@@ -521,6 +530,26 @@
   .integration-chip:hover {
     border-color: rgba(255,210,0,0.3);
     color: #fff;
+  }
+
+  .int-category-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    margin-top: 32px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .int-category-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
   /* ── CREDIBILITY ── */
@@ -739,7 +768,7 @@
   </p>
 
   <div class="hero-ctas">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank" class="btn-primary">Apply for Pilot</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform" target="_blank" class="btn-primary">Apply for Pilot</a>
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" class="btn-secondary">Schedule Discovery Call</a>
   </div>
 </section>
@@ -747,7 +776,6 @@
 <!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker-track">
-    <!-- first copy -->
     <div class="ticker-item"><div class="ticker-dot"></div>Game Confirmations Handled</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Weather Monitoring</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Postponement Notifications</div>
@@ -758,7 +786,6 @@
     <div class="ticker-item"><div class="ticker-dot"></div>10+ Hours Saved Weekly</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Arbiter Integration</div>
     <div class="ticker-item"><div class="ticker-dot"></div>BigTeams Integration</div>
-    <!-- duplicate for seamless loop -->
     <div class="ticker-item"><div class="ticker-dot"></div>Game Confirmations Handled</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Weather Monitoring</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Postponement Notifications</div>
@@ -788,7 +815,6 @@
     <div class="pain-card"><div class="pain-icon">⏱</div><p>Hours each week on communication cascades that should take minutes</p></div>
   </div>
 
-  <!-- Arbiter callout -->
   <div class="arbiter-callout">
     <div class="arbiter-icon">⚡</div>
     <div class="arbiter-content">
@@ -905,17 +931,54 @@
   <div class="section-title">WE WORK<br>IN YOUR <span>STACK.</span></div>
   <p class="section-body">No new platforms. No change management. We embed into the tools you already use and run operations from inside them.</p>
 
+  <div class="int-category-label">Scheduling &amp; Officials</div>
   <div class="integrations-grid">
     <div class="integration-chip">🏆 Arbiter Sports</div>
     <div class="integration-chip">📅 BigTeams / Schedule Star</div>
-    <div class="integration-chip">📋 rSchool</div>
-    <div class="integration-chip">📂 Google Workspace</div>
-    <div class="integration-chip">🌦 Perry Weather</div>
-    <div class="integration-chip">📡 NFHS Network</div>
+    <div class="integration-chip">📋 rSchool Today</div>
+    <div class="integration-chip">🐉 DragonFly MAX</div>
+    <div class="integration-chip">🔗 Bound</div>
+    <div class="integration-chip">🥇 AthleticNet</div>
+    <div class="integration-chip">🏅 Digital Scout</div>
+    <div class="integration-chip">🗓 CalendarWiz</div>
+  </div>
+
+  <div class="int-category-label">SIS · Rosters · Eligibility</div>
+  <div class="integrations-grid">
+    <div class="integration-chip">📚 PowerSchool</div>
+    <div class="integration-chip">🎓 Infinite Campus</div>
+    <div class="integration-chip">📖 Skyward</div>
+    <div class="integration-chip">📝 FinalForms</div>
+    <div class="integration-chip">🏅 Rank One Sport</div>
+    <div class="integration-chip">📋 8to18 / Activity Insight</div>
+    <div class="integration-chip">🩺 ImAthlete</div>
+  </div>
+
+  <div class="int-category-label">Ticketing &amp; Fan Experience</div>
+  <div class="integrations-grid">
+    <div class="integration-chip">🎟 GoFan</div>
     <div class="integration-chip">🎟 HomeTown Ticketing</div>
-    <div class="integration-chip">🎥 HUDL</div>
+    <div class="integration-chip">📲 Ticket Spicket</div>
+  </div>
+
+  <div class="int-category-label">Communications · Weather · Ops</div>
+  <div class="integrations-grid">
+    <div class="integration-chip">📂 Google Workspace</div>
     <div class="integration-chip">📱 Twilio SMS</div>
     <div class="integration-chip">📬 SendGrid Email</div>
+    <div class="integration-chip">🌦 Perry Weather</div>
+    <div class="integration-chip">🌪 Weather Underground</div>
+    <div class="integration-chip">🚌 Traversa / Edulog</div>
+    <div class="integration-chip">💬 Slack</div>
+  </div>
+
+  <div class="int-category-label">Video · Streaming · Network</div>
+  <div class="integrations-grid">
+    <div class="integration-chip">🎥 HUDL</div>
+    <div class="integration-chip">🎬 HUDL Assist</div>
+    <div class="integration-chip">📡 NFHS Network</div>
+    <div class="integration-chip">📺 Varsity Bound</div>
+    <div class="integration-chip">🎙 FloSports</div>
   </div>
 </section>
 
@@ -956,7 +1019,7 @@
   <div class="section-title" style="font-size: clamp(42px, 6vw, 80px);">STOP MANAGING.<br><span>START LEADING.</span></div>
   <p class="section-body">Spots are limited for Spring 2026. One discovery call is all it takes to find out if Skybox is the right fit for your program.</p>
   <div class="cta-buttons">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank" class="btn-primary">Fill Out Our Survey</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform" target="_blank" class="btn-primary">Fill Out Our Survey</a>
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" class="btn-secondary">Schedule Discovery Call</a>
   </div>
 </div>
@@ -966,7 +1029,7 @@
   <div class="footer-logo"><span>SKY</span>BOX : AC</div>
   <div class="footer-links">
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank">Schedule a Call</a>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform?usp=sharing&ouid=116943233485758540757" target="_blank">Apply</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeVJ7Q31xiH_EHKyuQhpRS4Vg7yjJMkQquj018ixQMrgAqjgA/viewform" target="_blank">Apply</a>
   </div>
   <div class="footer-copy">© 2026 Skybox: Athletics Command Center — A Row9 LLC Product</div>
 </footer>
