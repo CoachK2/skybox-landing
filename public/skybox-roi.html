@@ -260,8 +260,8 @@
         <!-- HARD SAVINGS INPUTS -->
         <div class="input-section visible" id="sec-hard">
           <div class="label" style="color:var(--blue);margin-bottom:14px;">Program Basics</div>
+          <div id="slider-teamsInProgram"></div>
           <div id="slider-gamesPerSeason"></div>
-          <div id="slider-sportsCount"></div>
           <div id="slider-minPerGame"></div>
           <div id="slider-ratePerHour"></div>
           <div id="slider-postponementsPerSeason"></div>
@@ -274,6 +274,12 @@
           <div class="label" style="color:var(--orange);margin-bottom:14px;">Chase-Down Friction</div>
           <div id="slider-systemsSwitchedPerGame"></div>
           <div id="slider-minChasePerGame"></div>
+          <div id="slider-supportMinPerGame"></div>
+          <div id="slider-supportRatePerHour"></div>
+          <div id="slider-weeklyAdminHrs"></div>
+          <div id="slider-seasonWeeks"></div>
+          <div id="slider-offseasonHrsPerWeek"></div>
+          <div id="slider-offseasonWeeks"></div>
           <div id="slider-noResponseFollowUps"></div>
           <div id="slider-minPerFollowUp"></div>
         </div>
@@ -281,10 +287,11 @@
         <!-- SOFT INPUTS -->
         <div class="input-section" id="sec-soft">
           <div class="label" style="color:var(--purple);margin-bottom:14px;">Soft Benefit Drivers</div>
-          <div id="slider-turnoverRiskPct"></div>
-          <div id="slider-avgTurnoverCost"></div>
           <div id="slider-parentComplaintsPerSeason"></div>
           <div id="slider-minPerComplaint"></div>
+          <div id="slider-turnoverRiskPct"></div>
+          <div id="slider-avgTurnoverCost"></div>
+          <div id="slider-fullRoleMultiplier"></div>
         </div>
 
         <!-- PRICING INPUTS -->
@@ -294,7 +301,6 @@
           <div style="margin-top:16px;padding:12px;background:#0a0e13;border:1px solid #1a1f28;border-radius:6px;">
             <div class="label" style="color:var(--dim);margin-bottom:6px;">Cost per game</div>
             <div class="mono" style="font-size:18px;font-weight:700;color:var(--green);" id="cost-per-game">—</div>
-            <div class="sub" style="margin-top:4px;">Less than a box of baseballs per season</div>
           </div>
         </div>
 
@@ -434,6 +440,39 @@
             <div class="workload-per">hrs / season</div>
           </div>
         </div>
+        <div class="workload-row">
+          <div class="workload-icon">👥</div>
+          <div style="flex:1;">
+            <div class="line-label">Support staff time (asst AD / secretary / student)</div>
+            <div class="line-calc" id="calc-support">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-support">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="workload-row">
+          <div class="workload-icon">📋</div>
+          <div style="flex:1;">
+            <div class="line-label">Weekly admin (eligibility, rosters, PIAA uploads, audit)</div>
+            <div class="line-calc" id="calc-admin">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-admin">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
+        <div class="workload-row">
+          <div class="workload-icon">☀️</div>
+          <div style="flex:1;">
+            <div class="line-label">Offseason prep (next-year schedules, registration, coach hiring)</div>
+            <div class="line-calc" id="calc-offseason">—</div>
+          </div>
+          <div>
+            <div class="workload-hrs" style="color:var(--orange);" id="hrs-offseason">—</div>
+            <div class="workload-per">hrs / season</div>
+          </div>
+        </div>
         <div class="workload-row" style="border-bottom:none;">
           <div class="workload-icon">📡</div>
           <div style="flex:1;">
@@ -494,10 +533,10 @@
     </div>
   </div>
 
-  <!-- Quote -->
+  <!-- Tagline -->
   <div class="quote-block">
-    <div class="quote-text">"I like no bullshit and I've been waiting for something like this for a really long time so I'm cautiously optimistic that this really could help take care of a huge portion of what we deal with all the time."</div>
-    <div class="quote-attr">— MIKE O'BRIEN, AD · FOX CHAPEL AREA HIGH SCHOOL · PILOT CUSTOMER</div>
+    <div class="quote-text">Built by a coach, for ADs. One operating layer across confirmations, officials, scheduling, and eligibility — so you can get back to running an athletic department instead of running software.</div>
+    <div class="quote-attr">— ROW9 LLC · SKYBOX COMMAND CENTER</div>
   </div>
 
   <div class="footer">© 2026 ROW9 LLC · SKYBOX COMMAND CENTER</div>
@@ -506,29 +545,36 @@
 <script>
 // ── State ──────────────────────────────────────────────────────────────────────
 const state = {
-  gamesPerSeason:         1057,
-  sportsCount:              75,
-  minPerGame:               25,
+  teamsInProgram:           20,
+  gamesPerSeason:          250,
+  minPerGame:               30,
   ratePerHour:              35,
-  errorCostPerSeason:      400,
+  errorCostPerSeason:      500,
   postponementsPerSeason:   12,
   minPerPostponement:       45,
   systemsSwitchedPerGame:    3,
-  minChasePerGame:          12,
+  minChasePerGame:          25,
+  supportMinPerGame:         3,
+  supportRatePerHour:       30,
+  weeklyAdminHrs:           10,
+  seasonWeeks:              40,
+  offseasonHrsPerWeek:       8,
+  offseasonWeeks:           12,
   noResponseFollowUps:      18,
   minPerFollowUp:           15,
-  turnoverRiskPct:          15,
-  avgTurnoverCost:       12000,
   parentComplaintsPerSeason:20,
   minPerComplaint:          20,
-  annualPrice:            2400,
+  turnoverRiskPct:           0,
+  avgTurnoverCost:       12000,
+  fullRoleMultiplier:      4.5,
+  annualPrice:            5000,
 };
 
 // ── Slider definitions ─────────────────────────────────────────────────────────
 const SLIDERS = [
   // Hard
-  { key: "gamesPerSeason",           label: "Games / season",            min: 10,   max: 1500, step: 5,    fmt: v => v,            section: "hard" },
-  { key: "sportsCount",              label: "Sports served",              min: 1,    max: 100,  step: 1,    fmt: v => v,            section: "hard" },
+  { key: "teamsInProgram",           label: "Teams in program",           min: 1,    max: 100,  step: 1,    fmt: v => v,            section: "hard", hint: "Total teams under your purview (context only — not in calc)" },
+  { key: "gamesPerSeason",           label: "Games per year",             min: 1,    max: 1200, step: 10,   fmt: v => v,            section: "hard", hint: "Total across all teams, all sports, all levels" },
   { key: "minPerGame",               label: "Min per confirmation",       min: 5,    max: 60,   step: 1,    fmt: v => v + " min",   section: "hard", hint: "Avg time per game to confirm opponent, officials, bus" },
   { key: "ratePerHour",              label: "AD hourly rate",             min: 20,   max: 100,  step: 5,    fmt: v => "$" + v + "/hr", section: "hard" },
   { key: "postponementsPerSeason",   label: "Postponements / season",     min: 0,    max: 40,   step: 1,    fmt: v => v,            section: "hard" },
@@ -536,14 +582,21 @@ const SLIDERS = [
   { key: "errorCostPerSeason",       label: "Error cost / season",        min: 0,    max: 2000, step: 50,   fmt: v => "$" + v,      section: "hard", hint: "Wrong officials, missed bus, last-min scrambles" },
   // Workload
   { key: "systemsSwitchedPerGame",   label: "Systems checked per game",   min: 1,    max: 8,    step: 1,    fmt: v => v,            section: "workload", hint: "Arbiter, Schedule Star, email, phone, text, etc." },
-  { key: "minChasePerGame",          label: "Min chasing per game",       min: 0,    max: 45,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Hunting down confirmations that haven't come back" },
+  { key: "minChasePerGame",          label: "Min chasing per game",       min: 0,    max: 60,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Hunting down confirmations that haven't come back" },
+  { key: "supportMinPerGame",        label: "Support staff min/game",     min: 0,    max: 20,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Assistant AD / secretary / student worker time per game" },
+  { key: "supportRatePerHour",       label: "Support staff hourly rate",  min: 15,   max: 60,   step: 5,    fmt: v => "$" + v + "/hr", section: "workload" },
+  { key: "weeklyAdminHrs",           label: "Weekly admin hours",         min: 0,    max: 40,   step: 1,    fmt: v => v + " hrs",   section: "workload", hint: "Eligibility checks, roster builds, PIAA uploads, audit" },
+  { key: "seasonWeeks",              label: "In-season weeks / year",     min: 20,   max: 52,   step: 1,    fmt: v => v + " wks",   section: "workload", hint: "Total weeks across fall + winter + spring" },
+  { key: "offseasonHrsPerWeek",      label: "Offseason hrs / week",       min: 0,    max: 30,   step: 1,    fmt: v => v + " hrs",   section: "workload", hint: "Summer prep: next year schedules, registration, coach hiring" },
+  { key: "offseasonWeeks",           label: "Offseason weeks",            min: 0,    max: 20,   step: 1,    fmt: v => v + " wks",   section: "workload" },
   { key: "noResponseFollowUps",      label: "Non-response follow-ups",    min: 0,    max: 60,   step: 1,    fmt: v => v,            section: "workload", hint: "Games needing 2nd or 3rd outreach attempt" },
   { key: "minPerFollowUp",           label: "Min per follow-up",          min: 5,    max: 30,   step: 1,    fmt: v => v + " min",   section: "workload" },
   // Soft
-  { key: "turnoverRiskPct",          label: "Turnover risk this year",    min: 0,    max: 100,  step: 5,    fmt: v => v + "%",      section: "soft", hint: "% chance AD leaves due to burnout or frustration" },
-  { key: "avgTurnoverCost",          label: "Avg AD turnover cost",       min: 5000, max: 30000,step: 500,  fmt: v => "$" + fmtNum(v), section: "soft", hint: "Recruiting, onboarding, institutional knowledge loss" },
   { key: "parentComplaintsPerSeason",label: "Parent complaints / season", min: 0,    max: 100,  step: 1,    fmt: v => v,            section: "soft", hint: "Irate emails, phone calls, missed comm fallout" },
   { key: "minPerComplaint",          label: "Min to resolve complaint",   min: 5,    max: 60,   step: 5,    fmt: v => v + " min",   section: "soft" },
+  { key: "turnoverRiskPct",          label: "Turnover risk this year",    min: 0,    max: 100,  step: 5,    fmt: v => v + "%",      section: "soft", hint: "% chance AD leaves due to burnout (leave at 0 if not applicable)" },
+  { key: "avgTurnoverCost",          label: "Avg AD turnover cost",       min: 5000, max: 30000,step: 500,  fmt: v => "$" + fmtNum(v), section: "soft", hint: "Recruiting, onboarding, institutional knowledge loss" },
+  { key: "fullRoleMultiplier",       label: "Full-role multiplier",       min: 1,    max: 6,    step: 0.1,  fmt: v => v + "×",      section: "soft", hint: "Confirmations + admin are just part of the job. This captures meetings, parent relationships, boosters, playoffs, coach hiring, discipline, and everything else your time touches." },
   // Price
   { key: "annualPrice",              label: "Skybox annual price",        min: 500,  max: 15000, step: 100,  fmt: v => "$" + fmtNum(v), section: "price" },
 ];
@@ -685,7 +738,7 @@ function recalc() {
   const s = state;
 
   // Hard
-  const confirmHrs  = (s.gamesPerSeason * s.sportsCount * s.minPerGame) / 60;
+  const confirmHrs  = (s.gamesPerSeason * s.minPerGame) / 60;
   const confirmSav  = Math.round(confirmHrs * s.ratePerHour);
   const postponeHrs = (s.postponementsPerSeason * s.minPerPostponement) / 60;
   const postponeSav = Math.round(postponeHrs * s.ratePerHour);
@@ -693,42 +746,52 @@ function recalc() {
   const totalHard   = confirmSav + postponeSav + errorSav;
 
   // Hidden workload
-  const switchHrs   = (s.gamesPerSeason * s.sportsCount * s.systemsSwitchedPerGame * 2.5) / 60;
+  const switchHrs   = (s.gamesPerSeason * s.systemsSwitchedPerGame * 10) / 60;
   const switchSav   = Math.round(switchHrs * s.ratePerHour);
-  const chaseHrs    = (s.gamesPerSeason * s.sportsCount * s.minChasePerGame) / 60;
+  const chaseHrs    = (s.gamesPerSeason * s.minChasePerGame) / 60;
   const chaseSav    = Math.round(chaseHrs * s.ratePerHour);
+  const supportHrs  = (s.gamesPerSeason * s.supportMinPerGame) / 60;
+  const supportSav  = Math.round(supportHrs * s.supportRatePerHour);
+  const adminHrs    = s.weeklyAdminHrs * s.seasonWeeks;
+  const adminSav    = Math.round(adminHrs * s.ratePerHour);
+  const offseasonHrs = s.offseasonHrsPerWeek * s.offseasonWeeks;
+  const offseasonSav = Math.round(offseasonHrs * s.ratePerHour);
   const followUpHrs = (s.noResponseFollowUps * s.minPerFollowUp) / 60;
   const followUpSav = Math.round(followUpHrs * s.ratePerHour);
   const relayHrs    = (s.postponementsPerSeason * 5 * 4) / 60;
   const relaySav    = Math.round(relayHrs * s.ratePerHour);
-  const totalChaseHrs = switchHrs + chaseHrs + followUpHrs + relayHrs;
-  const totalChaseSav = switchSav + chaseSav + followUpSav + relaySav;
+  const totalChaseHrs = switchHrs + chaseHrs + supportHrs + adminHrs + offseasonHrs + followUpHrs + relayHrs;
+  const totalChaseSav = switchSav + chaseSav + supportSav + adminSav + offseasonSav + followUpSav + relaySav;
 
-  // Soft
+  // Soft (base before multiplier)
   const retentionSav  = Math.round((s.turnoverRiskPct / 100) * s.avgTurnoverCost);
   const complaintHrs  = (s.parentComplaintsPerSeason * s.minPerComplaint) / 60;
   const complaintSav  = Math.round(complaintHrs * s.ratePerHour);
-  const softTotal     = retentionSav + complaintSav;
+  const baseSoft      = retentionSav + complaintSav;
+
+  // Full-role multiplier applies to the full base total
+  const baseTotal     = totalHard + totalChaseSav + baseSoft;
+  const grandTotal    = Math.round(baseTotal * s.fullRoleMultiplier);
+  const softTotal     = grandTotal - totalHard - totalChaseSav;
 
   // Totals
-  const totalHrs    = Math.round(confirmHrs + postponeHrs + totalChaseHrs);
-  const grandTotal  = totalHard + totalChaseSav + softTotal;
+  const totalHrs    = Math.round((confirmHrs + postponeHrs + totalChaseHrs) * s.fullRoleMultiplier);
   const roiMultiple = Math.max(1, Math.round(grandTotal / s.annualPrice));
   const dailySav    = grandTotal / 180;
   const daysToROI   = Math.round(s.annualPrice / dailySav);
-  const perGame     = Math.round(grandTotal / Math.max(1, s.gamesPerSeason * s.sportsCount));
+  const perGame     = Math.round(grandTotal / Math.max(1, s.gamesPerSeason));
 
   // ── Update DOM ──
   setRaw("roi-multiple", roiMultiple + "×");
   setRaw("total-hours", totalHrs + " hrs");
 
-  // cards
-  setRaw("card-hard",  fmtD(totalHard));
-  setRaw("card-chase", fmtD(totalChaseSav));
-  setRaw("card-soft",  fmtD(softTotal));
+  // cards (apply multiplier proportionally for display)
+  setRaw("card-hard",  fmtD(Math.round(totalHard * s.fullRoleMultiplier)));
+  setRaw("card-chase", fmtD(Math.round(totalChaseSav * s.fullRoleMultiplier)));
+  setRaw("card-soft",  fmtD(Math.round(baseSoft * s.fullRoleMultiplier)));
 
   // hard breakdown
-  setRaw("calc-confirm",  `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.minPerGame} min ÷ 60 × $${s.ratePerHour}/hr`);
+  setRaw("calc-confirm",  `${s.gamesPerSeason} games × ${s.minPerGame} min ÷ 60 × $${s.ratePerHour}/hr`);
   setRaw("val-confirm",   fmtD(confirmSav));
   setRaw("calc-postpone", `${s.postponementsPerSeason} postponements × ${s.minPerPostponement} min ÷ 60 × $${s.ratePerHour}/hr`);
   setRaw("val-postpone",  fmtD(postponeSav));
@@ -736,10 +799,16 @@ function recalc() {
   setRaw("sub-hard",      fmtD(totalHard));
 
   // workload breakdown
-  setRaw("calc-switch",   `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.systemsSwitchedPerGame} systems × 2.5 min avg`);
+  setRaw("calc-switch",   `${s.gamesPerSeason} games × ${s.systemsSwitchedPerGame} systems × 10 min avg`);
   setRaw("hrs-switch",    Math.round(switchHrs) + " hrs");
-  setRaw("calc-chase",    `${s.gamesPerSeason} games × ${s.sportsCount} sports × ${s.minChasePerGame} min chasing`);
+  setRaw("calc-chase",    `${s.gamesPerSeason} games × ${s.minChasePerGame} min chasing`);
   setRaw("hrs-chase",     Math.round(chaseHrs) + " hrs");
+  setRaw("calc-support",  `${s.gamesPerSeason} games × ${s.supportMinPerGame} min × $${s.supportRatePerHour}/hr support rate`);
+  setRaw("hrs-support",   Math.round(supportHrs) + " hrs");
+  setRaw("calc-admin",    `${s.weeklyAdminHrs} hrs/wk × ${s.seasonWeeks} wks × $${s.ratePerHour}/hr`);
+  setRaw("hrs-admin",     Math.round(adminHrs) + " hrs");
+  setRaw("calc-offseason",`${s.offseasonHrsPerWeek} hrs/wk × ${s.offseasonWeeks} wks × $${s.ratePerHour}/hr`);
+  setRaw("hrs-offseason", Math.round(offseasonHrs) + " hrs");
   setRaw("calc-followup", `${s.noResponseFollowUps} follow-ups × ${s.minPerFollowUp} min each`);
   setRaw("hrs-followup",  Math.round(followUpHrs) + " hrs");
   setRaw("calc-relay",    `${s.postponementsPerSeason} postponements × 4 contacts × 5 min avg`);
@@ -751,7 +820,7 @@ function recalc() {
   setRaw("val-retention",  fmtD(retentionSav));
   setRaw("calc-complaint", `${s.parentComplaintsPerSeason} complaints × ${s.minPerComplaint} min ÷ 60 × $${s.ratePerHour}/hr`);
   setRaw("val-complaint",  fmtD(complaintSav));
-  setRaw("sub-soft",       fmtD(softTotal));
+  setRaw("sub-soft",       fmtD(baseSoft));
 
   // TTV
   buildTTV(daysToROI);
@@ -765,7 +834,7 @@ function recalc() {
   setRaw("sum-net",    "+" + fmtD(grandTotal - s.annualPrice));
 
   // cost per game
-  const cpg = s.annualPrice / Math.max(1, s.gamesPerSeason * s.sportsCount);
+  const cpg = s.annualPrice / Math.max(1, s.gamesPerSeason);
   setRaw("cost-per-game", fmtD(Math.round(cpg)) + " / game");
 }
 
