@@ -454,7 +454,7 @@
         <div class="workload-row">
           <div class="workload-icon">📋</div>
           <div style="flex:1;">
-            <div class="line-label">Weekly admin (eligibility, rosters, PIAA uploads, audit)</div>
+            <div class="line-label">Weekly admin (eligibility, rosters, district/conference uploads, audit)</div>
             <div class="line-calc" id="calc-admin">—</div>
           </div>
           <div>
@@ -585,7 +585,7 @@ const SLIDERS = [
   { key: "minChasePerGame",          label: "Min chasing per game",       min: 0,    max: 60,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Hunting down confirmations that haven't come back" },
   { key: "supportMinPerGame",        label: "Support staff min/game",     min: 0,    max: 20,   step: 1,    fmt: v => v + " min",   section: "workload", hint: "Assistant AD / secretary / student worker time per game" },
   { key: "supportRatePerHour",       label: "Support staff hourly rate",  min: 15,   max: 60,   step: 5,    fmt: v => "$" + v + "/hr", section: "workload" },
-  { key: "weeklyAdminHrs",           label: "Weekly admin hours",         min: 0,    max: 40,   step: 1,    fmt: v => v + " hrs",   section: "workload", hint: "Eligibility checks, roster builds, PIAA uploads, audit" },
+  { key: "weeklyAdminHrs",           label: "Weekly admin hours",         min: 0,    max: 40,   step: 1,    fmt: v => v + " hrs",   section: "workload", hint: "Eligibility checks, roster builds, district/conference uploads, audit" },
   { key: "seasonWeeks",              label: "In-season weeks / year",     min: 20,   max: 52,   step: 1,    fmt: v => v + " wks",   section: "workload", hint: "Total weeks across fall + winter + spring" },
   { key: "offseasonHrsPerWeek",      label: "Offseason hrs / week",       min: 0,    max: 30,   step: 1,    fmt: v => v + " hrs",   section: "workload", hint: "Summer prep: next year schedules, registration, coach hiring" },
   { key: "offseasonWeeks",           label: "Offseason weeks",            min: 0,    max: 20,   step: 1,    fmt: v => v + " wks",   section: "workload" },
