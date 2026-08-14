@@ -116,21 +116,16 @@
   .nav-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-  }
-  .nav-logo img {
-    height: 40px;
-    width: auto;
-    filter: brightness(0) invert(1);
   }
   .nav-logo-text {
     font-family: var(--sans);
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    color: var(--white);
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     text-transform: uppercase;
   }
+  .nav-logo-text .sky { color: var(--gold); }
+  .nav-logo-text .box { color: var(--white); }
   .nav-links {
     display: flex;
     align-items: center;
@@ -706,8 +701,7 @@
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <a href="#" class="nav-logo">
-    <img src="/skybox-icon-nav.png" alt="Skybox" width="40" height="40">
-    <span class="nav-logo-text">Skybox</span>
+    <span class="nav-logo-text"><span class="sky">SKY</span><span class="box">BOX</span></span>
   </a>
   <div class="nav-links">
     <a href="#how-it-works">How It Works</a>
@@ -1045,7 +1039,7 @@
 
 <!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <div class="footer-brand"><img src="/skybox-wordmark-footer.png" alt="Skybox" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:8px;filter:brightness(0) invert(1);">Skybox</div>
+  <div class="footer-brand"><span class="sky" style="color:var(--gold);">SKY</span><span style="color:var(--white);">BOX</span></div>
   <div class="footer-links">
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" rel="noopener">Schedule a Demo</a>
     <a href="https://skybox-landing-production.up.railway.app/privacy-policy.html">Privacy Policy</a>
