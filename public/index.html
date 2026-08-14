@@ -116,11 +116,20 @@
   .nav-logo {
     display: flex;
     align-items: center;
+    gap: 12px;
   }
   .nav-logo img {
-    height: 72px;
+    height: 40px;
     width: auto;
     filter: brightness(0) invert(1);
+  }
+  .nav-logo-text {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
   .nav-links {
     display: flex;
@@ -697,7 +706,8 @@
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <a href="#" class="nav-logo">
-    <img src="/skybox-wordmark-nav.png" alt="Skybox" width="72" height="72">
+    <img src="/skybox-icon-nav.png" alt="Skybox" width="40" height="40">
+    <span class="nav-logo-text">Skybox</span>
   </a>
   <div class="nav-links">
     <a href="#how-it-works">How It Works</a>
