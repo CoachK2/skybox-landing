@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skybox: Athletics Command Center</title>
-<meta name="description" content="Athletic directors don't need another platform to log into. They need someone who logs in for them. Now onboarding WPIAL schools for Fall 2026.">
+<meta name="description" content="Skybox is the managed operations platform for WPIAL athletic directors. We run your confirmations, buses, officials communication, and daily ops — so you can lead your program.">
 <meta property="og:title" content="Skybox: Athletics Command Center">
-<meta property="og:description" content="Athletic directors don't need another platform to log into. They need someone who logs in for them. Now onboarding WPIAL schools for Fall 2026.">
+<meta property="og:description" content="Skybox is the managed operations platform for WPIAL athletic directors. We run your confirmations, buses, officials communication, and daily ops — so you can lead your program.">
 <meta property="og:image" content="https://skybox-landing-production.up.railway.app/skybox-og-image.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://skybox-landing-production.up.railway.app">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Skybox: Athletics Command Center">
-<meta name="twitter:description" content="Athletic directors don't need another platform to log into. They need someone who logs in for them. Now onboarding WPIAL schools for Fall 2026.">
+<meta name="twitter:description" content="Skybox is the managed operations platform for WPIAL athletic directors. We run your confirmations, buses, officials communication, and daily ops — so you can lead your program.">
 <meta name="twitter:image" content="https://skybox-landing-production.up.railway.app/skybox-og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,21 +114,21 @@
     justify-content: space-between;
   }
   .nav-logo {
-    font-family: var(--serif);
-    font-size: 24px;
-    color: var(--white);
-    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .nav-logo em { color: var(--gold); font-style: normal; }
-  .nav-logo small {
+  .nav-logo img {
+    height: 32px;
+    width: auto;
+  }
+  .nav-logo-text {
     font-family: var(--sans);
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 3px;
     text-transform: uppercase;
-    margin-left: 10px;
-    position: relative;
-    top: -1px;
   }
   .nav-links {
     display: flex;
@@ -309,98 +309,6 @@
     color: var(--muted);
     max-width: 600px;
     line-height: 1.7;
-  }
-
-  /* ── Migration Section ── */
-  .migration {
-    background: var(--bg-alt);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .migration-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    margin-top: 40px;
-    align-items: start;
-  }
-  .migration-left { }
-  .migration-facts {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .migration-fact {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 16px;
-    background: var(--card);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-  }
-  .migration-fact-icon {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .migration-fact-icon.warn {
-    background: var(--red-dim);
-  }
-  .migration-fact h4 {
-    font-size: 14px;
-    color: var(--white);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .migration-fact p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .migration-right {
-    background: var(--card);
-    border: 1px solid rgba(212,169,74,0.15);
-    border-radius: 14px;
-    padding: 32px;
-  }
-  .migration-right h3 {
-    font-family: var(--serif);
-    font-size: 22px;
-    color: var(--white);
-    margin-bottom: 16px;
-  }
-  .migration-right p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-  .migration-right p strong { color: var(--smoke); }
-  .migration-check-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 0;
-  }
-  .migration-check-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--smoke);
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .migration-check-list li:last-child { border: none; }
-  .migration-check-list .check {
-    color: var(--green-muted);
-    font-size: 16px;
-    flex-shrink: 0;
   }
 
   /* ── Pain Points ── */
@@ -732,11 +640,15 @@
     gap: 16px;
   }
   .footer-brand {
-    font-family: var(--serif);
-    font-size: 16px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
     color: var(--white);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
   }
-  .footer-brand em { color: var(--gold); font-style: normal; }
   .footer-links {
     display: flex;
     gap: 20px;
@@ -754,7 +666,6 @@
 
   /* ── Responsive ── */
   @media (max-width: 900px) {
-    .migration-grid,
     .proof-grid,
     .get-grid,
     .cred-grid { grid-template-columns: 1fr; }
@@ -785,8 +696,8 @@
 <!-- ═══ ANNOUNCEMENT BAR ═══ -->
 <div class="announce">
   <div class="announce-inner">
-    <span class="announce-badge">Now Live</span>
-    <span class="announce-text"><strong>Running operations for 15 WPIAL schools</strong> &middot; Onboarding for Fall 2026</span>
+    <span class="announce-badge">WPIAL Partner</span>
+    <span class="announce-text"><strong>The managed operations platform for WPIAL athletics</strong> &middot; Now onboarding for Fall 2026</span>
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="announce-link" target="_blank" rel="noopener">Schedule a Walkthrough &rarr;</a>
   </div>
 </div>
@@ -794,7 +705,8 @@
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <a href="#" class="nav-logo">
-    Sky<em>box</em><small>AC</small>
+    <img src="/skybox-icon-nav.png" alt="Skybox" width="32" height="32">
+    <span class="nav-logo-text">Skybox</span>
   </a>
   <div class="nav-links">
     <a href="#how-it-works">How It Works</a>
@@ -808,13 +720,13 @@
 <section class="hero">
   <div class="hero-eyebrow">
     <span class="dot"></span>
-    Now Onboarding for Fall 2026
+    WPIAL Operations Partner
   </div>
   <h1>WE RUN YOUR<br><span>OPERATIONS.</span><br>PERIOD.</h1>
   <p class="hero-sub">
     Athletic directors don't need another platform to log into.<br>
     They need someone who logs in <strong>for them.</strong><br>
-    Currently running operations for 15 WPIAL schools.
+    Trusted across the WPIAL. Running daily.
   </p>
   <div class="hero-ctas">
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="btn-primary" target="_blank" rel="noopener">Schedule a Demo &rarr;</a>
@@ -849,64 +761,9 @@
   </div>
 </div>
 
-<!-- ═══ MIGRATION SECTION ═══ -->
-<section class="section-full migration" id="migration">
-  <div class="section-inner">
-    <span class="section-label">Platform Landscape</span>
-    <h2 class="section-title">The Scheduling Stack <span>Is Consolidating.</span></h2>
-    <p class="section-desc">
-      Three major platforms. Two acquisitions. One forced migration timeline. If your scheduling tools are changing, your operations shouldn't have to.
-    </p>
-
-    <div class="migration-grid">
-      <div class="migration-left">
-        <div class="migration-facts">
-          <div class="migration-fact">
-            <div class="migration-fact-icon warn">&#9888;</div>
-            <div>
-              <h4>Platforms are being merged</h4>
-              <p>The scheduling tools many ADs rely on are being consolidated into a single system. Your current interface, workflows, and data are moving whether you asked for it or not.</p>
-            </div>
-          </div>
-          <div class="migration-fact">
-            <div class="migration-fact-icon warn">&#9888;</div>
-            <div>
-              <h4>Data migration is uncertain</h4>
-              <p>Due to privacy rules and complex data relationships, student and parent data may not transfer. Some schools are being told to start fresh.</p>
-            </div>
-          </div>
-          <div class="migration-fact">
-            <div class="migration-fact-icon warn">&#9888;</div>
-            <div>
-              <h4>Consolidation means less leverage</h4>
-              <p>Multiple acquisitions, one private equity-backed owner. Pricing, features, and support are being centralized. Your options as a customer are shrinking.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="migration-right">
-        <h3>Skybox works regardless.</h3>
-        <p>
-          Built by ADs, for ADs. We're an <strong>operational layer</strong> that sits on top of your existing stack, or you can build your schedule entirely on Skybox. Whatever you're on today, whatever you end up on tomorrow.
-        </p>
-        <p>
-          When the platform underneath changes, your operations don't skip a beat. Confirmations still go out. Buses still get notified. Your schedule still updates. That's the point.
-        </p>
-        <ul class="migration-check-list">
-          <li><span class="check">&#10003;</span> Compatible with the scheduling platforms ADs use today</li>
-          <li><span class="check">&#10003;</span> Platform-agnostic by design</li>
-          <li><span class="check">&#10003;</span> Your data lives in your Skybox instance, not theirs</li>
-          <li><span class="check">&#10003;</span> No new software for you to learn</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ PAIN POINTS ═══ -->
 <section class="section" id="pain">
-  <span class="section-label">Sound Familiar?</span>
+  <span class="section-label">The Problem</span>
   <h2 class="section-title">The Daily Grind <span>That Shouldn't Be Yours</span></h2>
   <p class="section-desc">
     You became an AD to lead programs and develop athletes. Not to manage an endless communication cascade.
@@ -985,10 +842,10 @@
 <!-- ═══ PROOF ═══ -->
 <section class="section-full proof" id="proof">
   <div class="section-inner">
-    <span class="section-label">Live in Western PA</span>
-    <h2 class="section-title">Not a Concept. <span>Running Now.</span></h2>
+    <span class="section-label">Across the WPIAL</span>
+    <h2 class="section-title">Running Daily. <span>Proven Results.</span></h2>
     <p class="section-desc">
-      Skybox is currently live with 15 WPIAL schools, including Fox Chapel Area School District, and onboarding more for Fall 2026.
+      Skybox runs operations for schools across the WPIAL, including Fox Chapel Area School District, with more onboarding for Fall 2026.
     </p>
 
     <div class="proof-stats" style="max-width: 640px;">
@@ -1035,12 +892,12 @@
 
 <!-- ═══ WHAT YOU GET ═══ -->
 <section class="section" id="onboarding">
-  <span class="section-label">Fall 2026 Onboarding</span>
+  <span class="section-label">What's Included</span>
   <h2 class="section-title">What You <span>Get.</span></h2>
 
   <div class="get-grid">
     <div class="get-col">
-      <h3>Included</h3>
+      <h3>Core Operations</h3>
       <ul class="get-list">
         <li><span class="icon">&#9670;</span> Game confirmations (4-stage automated cadence with escalation)</li>
         <li><span class="icon">&#9670;</span> Full bus operations (bidding, vendor management, coordination)</li>
@@ -1051,18 +908,17 @@
         <li><span class="icon">&#9670;</span> Full audit trail and internal reporting</li>
         <li><span class="icon">&#9670;</span> Secretary loop (CC'd on all outbound automatically)</li>
         <li><span class="icon">&#9670;</span> Dedicated operator support and workflow documentation</li>
-        <li><span class="icon">&#9670;</span> Schedule import</li>
+        <li><span class="icon">&#9670;</span> Schedule import from any platform</li>
       </ul>
     </div>
     <div class="get-col">
-      <h3>Early Partners Also Receive</h3>
+      <h3>Fall 2026 Onboarding</h3>
       <ul class="get-list">
         <li><span class="icon">&#9733;</span> Priority onboarding before fall season</li>
-        <li><span class="icon">&#9733;</span> Direct input on product direction</li>
-        <li><span class="icon">&#9733;</span> Founders pricing locked for life</li>
-        <li><span class="icon">&#9733;</span> First access to new features</li>
-        <li><span class="icon">&#9733;</span> Assignor module access (coming Fall 2026)</li>
-        <li><span class="icon">&#9733;</span> Direct line to the founding team</li>
+        <li><span class="icon">&#9733;</span> First access to new modules as they launch</li>
+        <li><span class="icon">&#9733;</span> Assignor module access (launching Fall 2026)</li>
+        <li><span class="icon">&#9733;</span> Direct line to the Skybox team</li>
+        <li><span class="icon">&#9733;</span> Full workflow documentation for your program</li>
       </ul>
     </div>
   </div>
@@ -1071,32 +927,32 @@
 <!-- ═══ WHAT'S COMING ═══ -->
 <section class="section-full" style="background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);" id="roadmap">
   <div class="section-inner">
-    <span class="section-label">In Development</span>
-    <h2 class="section-title">Skybox Is <span>Growing.</span></h2>
+    <span class="section-label">What's Next</span>
+    <h2 class="section-title">The Full Stack. <span>Coming Fast.</span></h2>
     <p class="section-desc">
-      We handle your daily operations now. But we're building the full operational stack so everything runs through one place.
+      Skybox already runs your daily operations. These modules bring the rest of the athletic department under one roof.
     </p>
 
     <div class="steps" style="margin-top: 40px;">
       <div class="step">
         <div class="step-icon">&#128203;</div>
         <h4>Eligibility + Rostering</h4>
-        <p>Certification tracking, roster building, and compliance monitoring built into the same system that runs your games. No separate platform, no duplicate entry.</p>
+        <p>Certification tracking, roster building, and compliance monitoring built into the same system that runs your games. Requires district DPA approval.</p>
       </div>
       <div class="step">
         <div class="step-icon">&#128101;</div>
         <h4>Referee Management</h4>
-        <p>Full assignor integration: assignment workflows, accept/decline, blocking, availability, and two-way communication between ADs and assignors in one place.</p>
+        <p>Full assignor integration: assignment workflows, accept/decline, blocking, availability, and two-way communication between ADs and assignors.</p>
       </div>
       <div class="step">
-        <div class="step-icon">&#128179;</div>
-        <h4>Official Payments</h4>
-        <p>Game fee tracking and payment processing tied directly to assignments. No spreadsheets, no separate pay runs.</p>
+        <div class="step-icon">&#127967;</div>
+        <h4>Facility Management</h4>
+        <p>Facility scheduling, conflict detection, and availability tracking across all venues. One view of every gym, field, and court in your program.</p>
       </div>
       <div class="step">
         <div class="step-icon">&#9889;</div>
-        <h4>And More</h4>
-        <p>Weather alerts with game-day decision links. Morning briefing SMS. Text-to-agent commands. Conference oversight. All coming to every school at no additional cost.</p>
+        <h4>Medical + Clearance</h4>
+        <p>An eligibility layer for your athletic trainers and medical staff. Physical tracking, clearance status, and return-to-play workflows in one place.</p>
       </div>
     </div>
   </div>
@@ -1105,41 +961,34 @@
 <!-- ═══ INTEGRATIONS ═══ -->
 <section class="section" id="integrations">
   <span class="section-label">Integrations</span>
-  <h2 class="section-title">We Work in <span>Your Stack.</span></h2>
+  <h2 class="section-title">Works With <span>What You Have.</span></h2>
   <p class="section-desc">
-    We integrate with whatever scheduling and communication tools you're already using. No rip-and-replace. But the direction is clear: Skybox is becoming a fully managed operational platform, end to end.
+    Skybox connects to the scheduling and communication tools you already use. No rip-and-replace.
   </p>
 
   <div class="integrations-grid" style="grid-template-columns: 1fr 1fr;">
     <div class="int-group">
       <h4>How We Connect</h4>
       <ul>
-        <li>&#128197; Schedule import</li>
-        <li>&#128101; Officials assignment scraping and monitoring</li>
+        <li>&#128197; Schedule import from any platform</li>
+        <li>&#128101; Officials assignment monitoring</li>
         <li>&#128194; Google Workspace</li>
         <li>&#128241; SMS notifications</li>
-        <li>&#128236; Automated email outbound</li>
+        <li>&#128236; Automated email</li>
       </ul>
     </div>
     <div class="int-group">
-      <h4>What We Run Operationally</h4>
+      <h4>What We Run</h4>
       <ul>
-        <li>&#9989; Game confirmations (4-stage automated cadence)</li>
-        <li>&#128652; Full bus operations (bidding, coordination, vendor management)</li>
-        <li>&#128101; Officials monitoring and assignor nudges</li>
-        <li>&#9928; Weather monitoring and postponement cascades (Fall 2026)</li>
-        <li>&#128203; Coach game reports (submission, formatting, AD approval)</li>
-        <li>&#128240; Public schedule page and iCal feeds for parents</li>
-        <li>&#128209; Internal audit trail and reporting</li>
-        <li>&#128172; Secretary loop (CC'd on all outbound automatically)</li>
+        <li>&#9989; Game confirmations</li>
+        <li>&#128652; Bus operations</li>
+        <li>&#128101; Officials communication</li>
+        <li>&#9928; Postponement cascades</li>
+        <li>&#128203; Coach game reports</li>
+        <li>&#128240; Parent schedule pages + iCal</li>
+        <li>&#128209; Audit trail</li>
       </ul>
     </div>
-  </div>
-
-  <div style="margin-top: 32px; padding: 24px 28px; background: var(--card); border: 1px solid var(--border); border-radius: 12px;">
-    <p style="font-size: 14px; color: var(--muted); line-height: 1.7;">
-      <strong style="color: var(--smoke);">Using something else?</strong> If your school runs on a different scheduling platform, SIS, or communication tool, we'll connect to it. The goal is simple: whatever you're on, we run ops on top of it. And as the platform grows, more of those functions move inside Skybox natively.
-    </p>
   </div>
 </section>
 
@@ -1150,14 +999,14 @@
 
   <div class="cred-grid">
     <div class="cred-card">
-      <div class="cred-label">Athletics Credibility</div>
+      <div class="cred-label">Athletics Background</div>
       <h3>From the Inside Out</h3>
-      <p>Founded by a former Division I basketball coach and head coach with over three decades of experience at the high school, middle school, and collegiate level, having served as a middle school athletic director. We understand the operational reality of this job. Not from the outside looking in, but from inside the building.</p>
+      <p>Founded by Kerry Keating, a former Division I head coach with over three decades of experience across college, high school, and middle school athletics. We understand the operational reality of this job because we've lived it.</p>
     </div>
     <div class="cred-card">
-      <div class="cred-label">Purpose-Built Technology</div>
+      <div class="cred-label">Purpose-Built</div>
       <h3>Operations, Not More Software</h3>
-      <p>Skybox runs your operations on the back end. When you do want to look, everything lives on one actionable dashboard, not scattered across five platforms. Confirmation parsing, conflict detection, bus routing, schedule imports. The work gets done. You see the results. One screen, not ten.</p>
+      <p>Skybox runs your operations on the back end. When you want to look, everything lives on one dashboard. Confirmations, conflicts, buses, schedules. The work gets done. You see the results.</p>
     </div>
   </div>
 </section>
@@ -1175,7 +1024,7 @@
       <div class="demo-date">Live 1-on-1 Walkthrough</div>
       <div class="demo-time">Scheduled around your day</div>
       <p class="demo-details">
-        Open to WPIAL athletic directors exploring operational support for the 2026-27 school year. Pick a time below and we'll walk you through the platform with real school data.
+        See how Skybox runs operations for WPIAL schools. Pick a time and we'll walk you through the platform with real data from real programs.
       </p>
       <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="btn-primary" target="_blank" rel="noopener">Schedule Your Demo &rarr;</a>
     </div>
@@ -1184,10 +1033,9 @@
 
 <!-- ═══ FINAL CTA ═══ -->
 <div class="final-cta">
-  <span class="section-label">Fall 2026</span>
   <h2 class="section-title">Stop Managing. <span>Start Leading.</span></h2>
   <p class="section-desc" style="margin: 0 auto 32px;">
-    One conversation is all it takes to find out if Skybox is the right fit for your program.
+    One conversation. That's all it takes.
   </p>
   <div class="hero-ctas">
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" class="btn-primary" target="_blank" rel="noopener">Schedule a Demo &rarr;</a>
@@ -1196,7 +1044,7 @@
 
 <!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <div class="footer-brand">Sky<em>box</em> : AC</div>
+  <div class="footer-brand"><img src="/skybox-icon-nav.png" alt="Skybox" width="24" height="24" style="display:inline-block;vertical-align:middle;margin-right:8px;">Skybox</div>
   <div class="footer-links">
     <a href="https://calendly.com/kerrykeating/30-minute-video-call" target="_blank" rel="noopener">Schedule a Demo</a>
     <a href="https://skybox-landing-production.up.railway.app/privacy-policy.html">Privacy Policy</a>
